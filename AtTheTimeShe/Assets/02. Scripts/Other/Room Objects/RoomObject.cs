@@ -1,0 +1,13 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+
+public abstract class RoomObject : MonoBehaviour, IInteractable
+{
+    public Collider2D interactRange;    // 상호작용 범위
+
+    public abstract void Interact();
+}

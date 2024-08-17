@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/DialogueUI/DialogueUI.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/DialogueUI/EndingUI.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/DialogueUI/IDialogueUI.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/DialogueUI/MonologueUI.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/DialogueUI/TrueEndingUI.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/Managers/DialogueSceneManager/ChoiceController/ChoiceElement.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/Managers/DialogueSceneManager/IllustrationController.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/02. Scripts/Managers/ResourceManager.cs" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
