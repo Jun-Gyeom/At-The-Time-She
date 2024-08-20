@@ -14,9 +14,13 @@ public class GameManager : Singleton<GameManager>
     public bool DidTodayDialogue { get; set; }          // 오늘 대화를 진행하였는지 여부 
     public int GoodChoiceNumber { get; set; }           // 좋은 선택 횟수 
     public int BadChoiceNumber { get; set; }            // 나쁜 선택 횟수
+    public bool GiveGift { get; set; }                  // 선물을 주었는지 여부 
+    public bool HasGift { get; set; }                   // 선물을 소지하고 있는지 여부 
+    public int WorkNumber { get; set; }                 // 컴퓨터로 일한 횟수
 
     [Header("Settings")]
     public List<Date> dates;                            // 날짜 리스트 
+    public int workNumberForHasGift;                    // 선물을 얻기 위해 필요한 일한 횟수 
     
     private Camera _mainCamera;
     private GameObject _currentOnPointObject = null;
@@ -97,7 +101,22 @@ public class GameManager : Singleton<GameManager>
         // 오늘 대화 여부 초기화
         DidTodayDialogue = false;
     }
-    
+
+    // 컴퓨터로 일하는 메서드 
+    public void Work()
+    {
+        // 일한 횟수 증가 
+        WorkNumber++;
+
+        // 일한 횟수가 충족되었다면 선물 획득. 
+        if (WorkNumber >= workNumberForHasGift)
+        {
+            HasGift = true;
+        }
+        
+        Debug.Log($"일을 완료했습니다! 일한 횟수 : {WorkNumber}");
+    }
+
     private void OnEnable()
     {
         InputManager.OnNextDialogue += OnNextDialogue;

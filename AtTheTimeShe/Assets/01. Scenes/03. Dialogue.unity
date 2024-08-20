@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 24090475}
   - component: {fileID: 24090474}
   m_Layer: 5
-  m_Name: Monologue Text
+  m_Name: Narration Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,15 +150,15 @@ RectTransform:
   m_GameObject: {fileID: 24090472}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1707968237}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 560, y: 92}
+  m_SizeDelta: {x: 1680, y: 276}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &24090474
 MonoBehaviour:
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: It's test dialogue!
+  m_text: "\uC774\uAC83\uC740 \uB098\uB808\uC774\uC158\uC785\uB2C8\uB2E4. "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fad252a1f586c7d4390e111efacdd405, type: 2}
   m_sharedMaterial: {fileID: -5430804664115118907, guid: fad252a1f586c7d4390e111efacdd405, type: 2}
@@ -207,12 +207,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
+  m_fontSize: 40
   m_fontSizeBase: 12
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 40
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -615,15 +615,15 @@ RectTransform:
   m_GameObject: {fileID: 352866431}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 737277155}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 150, y: 0}
-  m_SizeDelta: {x: 460, y: 92}
+  m_SizeDelta: {x: 1380, y: 276}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &352866433
 MonoBehaviour:
@@ -645,7 +645,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: It's test dialogue!
+  m_text: "\uD639\uC2DC \uC9C4\uD601\uC528\uB294 \uBCA0\uB780\uB2E4 \uC790\uC8FC
+    \uB098\uC640\uC694?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fad252a1f586c7d4390e111efacdd405, type: 2}
   m_sharedMaterial: {fileID: -5430804664115118907, guid: fad252a1f586c7d4390e111efacdd405, type: 2}
@@ -672,12 +673,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
+  m_fontSize: 40
   m_fontSizeBase: 12
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 20
+  m_fontSizeMax: 40
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -1260,12 +1261,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verandaDialoguePanelGameObject: {fileID: 737277154}
-  verandaCharacterPortraitImage: {fileID: 570617002}
   verandaDialogueText: {fileID: 352866433}
-  verandaMonologuePanelGameObject: {fileID: 1707968236}
-  verandaMonologueText: {fileID: 24090474}
+  verandaNarrationPanelGameObject: {fileID: 1707968236}
+  verandaNarrationText: {fileID: 24090474}
   verandaIllustrationGameObject: {fileID: 2083377739}
   verandaIllustrationImage: {fileID: 2083377741}
+  verandaPortraitGameObject: {fileID: 570617000}
+  verandaPortraitImage: {fileID: 570617002}
   verandaDisplayItemPanelGameObject: {fileID: 1741168361}
   verandaDisplayItemImage: {fileID: 1741168363}
   verandaChoicePanelGameObject: {fileID: 177162053}
@@ -1357,7 +1359,7 @@ GameObject:
   - component: {fileID: 1638230407}
   - component: {fileID: 1638230406}
   m_Layer: 5
-  m_Name: Monologue Background
+  m_Name: Narration Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1430,7 +1432,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1707968237}
   m_Layer: 5
-  m_Name: Monolouge Panel
+  m_Name: Narration Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

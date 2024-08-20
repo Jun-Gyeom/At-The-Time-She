@@ -306,6 +306,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8d47d11ebac394044b602fa7eefc9cad, type: 2}
   - {fileID: 11400000, guid: b8a960da95418154bb56209b8ab5a8f4, type: 2}
   - {fileID: 11400000, guid: e802160ab054f4f4da8aa17db3959f5c, type: 2}
+  workNumberForHasGift: 0
 --- !u!1 &4575582449302253171
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,6 +476,7 @@ GameObject:
   - component: {fileID: 3502523500264115029}
   - component: {fileID: 8285329874885878633}
   - component: {fileID: 5532090499169320401}
+  - component: {fileID: 6075836976194766822}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -511,13 +513,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dialogueScenes: []
   illustrationController: {fileID: 8285329874885878633}
+  portraitController: {fileID: 6075836976194766822}
   displayItemController: {fileID: 5532090499169320401}
   choiceController: {fileID: 3502523500264115029}
   verandaDialoguePanelGameObject: {fileID: 0}
-  verandaCharacterPortraitImage: {fileID: 0}
+  verandaTalkerText: {fileID: 0}
   verandaDialogueText: {fileID: 0}
-  verandaMonologuePanelGameObject: {fileID: 0}
-  verandaMonologueText: {fileID: 0}
+  verandaNarrationPanelGameObject: {fileID: 0}
+  verandaNarrationText: {fileID: 0}
+  roomTextBoxPanelGameObject: {fileID: 0}
+  roomTalkerText: {fileID: 0}
+  roomTextBoxText: {fileID: 0}
+  roomNarrationTextPanelGameObject: {fileID: 0}
+  roomNarrationText: {fileID: 0}
 --- !u!114 &3502523500264115029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,6 +540,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verandaChoicePanelGameObject: {fileID: 0}
   verandaChoiceButtons: []
+  roomChoicePanelGameObject: {fileID: 0}
+  roomChoiceButtons: []
 --- !u!114 &8285329874885878633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -546,6 +556,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verandaIllustrationGameObject: {fileID: 0}
   verandaIllustrationImage: {fileID: 0}
+  roomDisplayImagePanelGameObject: {fileID: 0}
+  roomDisplayImage: {fileID: 0}
 --- !u!114 &5532090499169320401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,6 +572,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verandaDisplayItemPanelGameObject: {fileID: 0}
   verandaDisplayItemImage: {fileID: 0}
+--- !u!114 &6075836976194766822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5874755700018351879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bcc336b6ee152b4485cbc0955381ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verandaPortraitGameObject: {fileID: 0}
+  verandaPortraitImage: {fileID: 0}
 --- !u!1 &7383504225692361251
 GameObject:
   m_ObjectHideFlags: 0

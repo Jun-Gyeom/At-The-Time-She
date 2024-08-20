@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bb92f8169ad26f41a318ffc4089e853, type: 3}
-  m_Name: Day 0
+  m_Script: {fileID: 11500000, guid: e71c381b48dcac045999f0788d2ddd78, type: 3}
+  m_Name: New Ending
   m_EditorClassIdentifier: 
-  date: 0
-  linkedDialogueSceneID: 1
+  endingName: 
+  endingDialogueSceneID: 0
+  isUnlocked: 0

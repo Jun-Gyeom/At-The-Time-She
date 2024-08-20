@@ -1,13 +1,15 @@
 using System;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class DialogueElement
 {
-    public string dialogueText;         // ´ë»ç
-    public int choiceID;                // ¼±ÅÃÁö ID
-    public int linkedDialogueID;        // ¿¬°áµÈ ´ë»ç ID
-    public string sfxName;              // È¿°úÀ½ ÀÌ¸§
-    public string bgmName;              // ¹è°æÀ½¾Ç ÀÌ¸§
-    public string displayItemName;      // Ç¥½Ã ¾ÆÀÌÅÛ ÀÌ¸§
-    public string illustrationName;     // »ğÈ­ ÀÌ¸§
+    public string dialogueText;         // ëŒ€ì‚¬
+    public int choiceID;                // ì„ íƒì§€ ID
+    public int linkedDialogueID;        // ì—°ê²°ëœ ëŒ€ì‚¬ ID
+    public string illustrationName;     // ì‚½í™” ì´ë¦„
+    public string displayItemName;      // í‘œì‹œ ì•„ì´í…œ ì´ë¦„
+    public string characterPortraitName;// ì´ˆìƒí™” ì´ë¦„ 
+    public string sfxName;              // íš¨ê³¼ìŒ ì´ë¦„
+    public string bgmName;              // ë°°ê²½ìŒì•… ì´ë¦„
 }

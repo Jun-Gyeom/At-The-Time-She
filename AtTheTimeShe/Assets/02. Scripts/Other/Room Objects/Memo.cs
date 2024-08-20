@@ -6,6 +6,7 @@ public class Memo : RoomObject
 {
     public override void Interact()
     {
-        Debug.Log("메모 로직 구현하기");
+        // 대사 출력 
+        DialogueManager.Instance.StartDialogue(linkedDialogueSceneID);
     }
 }

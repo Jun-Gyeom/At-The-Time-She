@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class CSVParser
+public class CSVParser
 {
     // 대화 씬 데이터 파싱
-    public static List<DialogueScene> LoadDialogues(TextAsset csvFile)
+    public List<DialogueScene> LoadDialogues(TextAsset csvFile)
     {
         List<DialogueScene> dialogueScenes = new List<DialogueScene>();
         string[] lines = csvFile.text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -13,7 +13,7 @@ public static class CSVParser
         DialogueScene dialogueScene = null;
         Dialogue dialogue = null;
 
-        for (int i = 2; i < lines.Length; i++)
+        for (int i = 2; i < lines.Length; i++) // 첫 번째 줄과 두 번째 줄은 헤더이므로 건너뜁니다.
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] values = lines[i].Split(',');
@@ -32,12 +32,11 @@ public static class CSVParser
                 dialogueScene = new DialogueScene
                 {
                     sceneID = int.TryParse(values[0].Trim(), out int sceneID) ? sceneID : 0,
-                    sceneType = SceneType.TryParse(values[1].Trim(), out SceneType sceneType) ? sceneType : SceneType.None,
                     dialogues = new List<Dialogue>()
                 };
             }
 
-            if (!string.IsNullOrWhiteSpace(values[2])) // 대화 ID가 존재하는 경우 새 대화 생성
+            if (!string.IsNullOrWhiteSpace(values[1])) // 대화 ID가 존재하는 경우 새 대화 생성
             {
                 if (dialogue != null && dialogueScene != null) // 이전 대화 추가
                 {
@@ -45,9 +44,9 @@ public static class CSVParser
                 }
                 dialogue = new Dialogue
                 {
-                    dialogueID = int.TryParse(values[2].Trim(), out int dialogueID) ? dialogueID : 0,
-                    characterPortrait = values[3].Trim(),
-                    talker = values[4].Trim(),
+                    dialogueID = int.TryParse(values[1].Trim(), out int dialogueID) ? dialogueID : 0,
+                    dialogueType = DialogueType.TryParse(values[2].Trim(), out DialogueType dialogueType) ? dialogueType : DialogueType.None,
+                    talker = values[3].Trim(),
                     dialogueElements = new List<DialogueElement>()
                 };
             }
@@ -57,13 +56,14 @@ public static class CSVParser
             {
                 DialogueElement dialogueElement = new DialogueElement
                 {
-                    dialogueText = values[5].Trim(),
-                    choiceID = int.TryParse(values[6], out int choiceID) ? choiceID : 0,
-                    linkedDialogueID = int.TryParse(values[7], out int linkedDialogueID) ? linkedDialogueID : 0,
-                    sfxName = values[8].Trim(),
-                    bgmName = values[9].Trim(),
-                    displayItemName = values[10].Trim(),
-                    illustrationName = values[11].Trim()
+                    dialogueText = values[4].Trim(),
+                    choiceID = int.TryParse(values[5], out int choiceID) ? choiceID : 0,
+                    linkedDialogueID = int.TryParse(values[6], out int linkedDialogueID) ? linkedDialogueID : 0,
+                    illustrationName = values[7].Trim(),
+                    characterPortraitName = values[8].Trim(),
+                    displayItemName = values[9].Trim(),
+                    sfxName = values[10].Trim(),
+                    bgmName = values[11].Trim(),
                 };
                 dialogue.dialogueElements.Add(dialogueElement);
             }
@@ -83,7 +83,7 @@ public static class CSVParser
     }
     
     // 대화 선택지 데이터 파싱
-    public static List<Choice> LoadDialogueChoices(TextAsset csvFile)
+    public List<Choice> LoadDialogueChoices(TextAsset csvFile)
     {
         List<Choice> dialogueChoices = new List<Choice>();
         string[] lines = csvFile.text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -113,10 +113,8 @@ public static class CSVParser
             ChoiceElement choiceElement = new ChoiceElement
             {
                 choiceText = values[1].Trim(),
-                // 이 예제에서는 condition과 triggerEvent가 단순화된 형태로 제공됩니다. 
-                // 실제 구현에서는 런타임에 평가되어야 할 복잡한 로직을 포함할 수 있습니다.
-                condition = () => true,  // 조건 로직 필요 시 여기에 구현
-                triggerEvent = () => { }, // 이벤트 로직 필요 시 여기에 구현
+                condition = TextToCondition(values[2]),  // 선택지 선택 조건 델리게이트에 반환값 bool 형태의 메서드 추가  
+                triggerEvent = TextToTriggerEvent(values[3]), // 선택지 선택 시 발동 이벤트 델리게이트에 메서드 추가 
                 linkedDialogueID = int.TryParse(values[4].Trim(), out int linkedDialogueID) ? linkedDialogueID : 0
             };
             currentChoice.choiceElements.Add(choiceElement);
@@ -129,5 +127,82 @@ public static class CSVParser
         }
 
         return dialogueChoices;
+    }
+
+    // 텍스트를 선택지 선택 조건 Func<bool>로 변환시켜주는 메서드 
+    private Func<bool> TextToCondition(string text)
+    {
+        Func<bool> condition;
+        
+        switch (text)
+        {
+            // 해당 란이 비어있다면 조건이 없는 것으로 간주 
+            case "":
+                condition = () => true;
+                break;
+            
+            // 선물을 소지하고 있는지 여부 
+            case "HasGift":
+                condition = () => GameManager.Instance.HasGift;
+                break;
+            
+            default:
+                Debug.LogError($"다음 이름의 메서드를 찾을 수 없습니다 : {text}");
+                condition = () => true;
+                break;
+        }
+
+        return condition;
+    }
+
+    // 텍스트를 발생 이벤트 Action으로 변환시켜주는 메서드 
+    private Action TextToTriggerEvent(string text)
+    {
+        Action triggerEvent;
+
+        switch (text)
+        {
+            // 해당 란이 비어있다면 이벤트가 없는 것으로 간주 
+            case "":
+                triggerEvent = () => { };
+                break;
+            
+            // 대화
+            // 대화 - 좋은 선택지 선택 횟수 증가 
+            case "GoodChoice":
+                triggerEvent = () => { GameManager.Instance.GoodChoiceNumber++; };
+                break;
+            
+            // 대화 - 나쁜 선택지 선택 횟수 증가 
+            case "BadChoice":
+                triggerEvent = () => { GameManager.Instance.BadChoiceNumber++; };
+                break;
+            
+            // 대화 - 선물 주기
+            case "Gift":
+                triggerEvent = () => { GameManager.Instance.GiveGift = true; };
+                break;
+            
+            // 방 - 대화 창 닫기 
+            
+            // 방 - 다음 날로 ( 침대 )
+            
+            // 방 - 베란다로 ( 베란다 )
+            
+            // 방 - 일하기 ( 컴퓨터 )
+            case "Work":
+                triggerEvent = () => { GameManager.Instance.Work(); };
+                break;
+            
+            // 타이틀 - 세이브파일 불러오기 
+            // 추후 구현. 
+            
+            default:
+                Debug.LogError($"다음 이름의 메서드를 찾을 수 없습니다 : {text}");
+                triggerEvent = () => { };
+                break;
+        }
+
+        return triggerEvent;
     }
 }

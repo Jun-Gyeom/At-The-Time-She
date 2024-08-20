@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = System.Random;
 
 public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
 {
     [Header("Setting")] 
     public int goodChoiceNumberForNeatBedding;      // 정돈된 이불을 위한 좋은 선택 횟수
     public int goodChoiceNumberForCleanTrash;       // 쓰레기 청소를 위한 좋은 선택 횟수
+    public List<int> randomMorningDialogueIDs;      // 아침 랜덤한 한 마디 대화 ID 리스트 
     
     [Header("Reference")]
     public GameObject neatBeddingGameObject;        // 정돈된 이불 게임 오브젝트
@@ -15,6 +19,20 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
     public GameObject trashGameObject;              // 쓰레기 봉지 게임 오브젝트
     public GameObject trashColliderGameObject;      // 쓰레기 봉지 콜라이더 게임 오브젝트 
     public GameObject darkPanelGameObject;          // 어두운 패널 게임 오브젝트 
+
+    [Header("Initialize")] 
+    public GameObject roomTextBoxPanelGameObject;   // 방 텍스트 박스 게임 오브젝트
+    public TMP_Text roomTalkerText;                 // 방 텍스트 박스 화자 텍스트  
+    public TMP_Text roomTextBoxText;                // 방 텍스트 박스 텍스트 
+
+    public GameObject roomNarrationPanelGameObject; // 방 나레이션 패널 게임 오브젝트
+    public TMP_Text roomNarrationText;              // 방 나레이션 패널 텍스트 
+    
+    public GameObject roomChoicePanelGameObject;    // 방 선택지 패널 게임 오브젝트 
+    public List<Button> roomChoiceButtons;          // 방 선택지 버튼 리스트 
+    
+    public GameObject roomDisplayPanelGameObject;   // 방 표시 이미지 패널 게임 오브젝트
+    public Image roomDisplayImage;                  // 방 표시 이미지
     
     private void Start()
     {
@@ -30,10 +48,31 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
         
         // 오늘 대화 여부에 따라 방 밝기 적용 
         darkPanelGameObject.SetActive(GameManager.Instance.DidTodayDialogue);
+
+        // 아침 랜덤 한 마디 이벤트에 등록 
+        if (!GameManager.Instance.DidTodayDialogue)
+        {
+            SceneController.Instance.OnFadeComplate += RandomMorningDialogue;
+        }
+        
+        // 대화 매니저 변수 할당
+        DialogueManager.Instance.roomTextBoxPanelGameObject = roomTextBoxPanelGameObject;
+        DialogueManager.Instance.roomTalkerText = roomTalkerText;
+        DialogueManager.Instance.roomTextBoxText = roomTextBoxText;
+
+        DialogueManager.Instance.roomNarrationTextPanelGameObject = roomNarrationPanelGameObject;
+        DialogueManager.Instance.roomNarrationText = roomNarrationText;
+        
+        DialogueManager.Instance.choiceController.roomChoicePanelGameObject = roomChoicePanelGameObject;
+        DialogueManager.Instance.choiceController.roomChoiceButtons = roomChoiceButtons;
+        
+        // 일러스트 컨트롤러 변수 할당 
+        IllustrationController.Instance.roomDisplayImagePanelGameObject = roomDisplayPanelGameObject;
+        IllustrationController.Instance.roomDisplayImage = roomDisplayImage;
     }
 
     // 방 상태 업데이트 메서드 
-    public void UpdateRoomState()
+    private void UpdateRoomState()
     {
         Debug.Log("방 정리!");
         int goodChoiceNumber = GameManager.Instance.GoodChoiceNumber;
@@ -49,5 +88,11 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
         bool trashActive = !(goodChoiceNumber >= goodChoiceNumberForCleanTrash);
         trashGameObject.SetActive(trashActive);
         trashColliderGameObject.SetActive(trashActive);
+    }
+
+    private void RandomMorningDialogue()
+    {
+        int random = UnityEngine.Random.Range(0, randomMorningDialogueIDs.Count);
+        DialogueManager.Instance.StartDialogue(randomMorningDialogueIDs[random]);
     }
 }

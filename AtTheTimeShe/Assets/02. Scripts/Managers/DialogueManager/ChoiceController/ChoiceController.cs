@@ -3,15 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ChoiceController : Singleton<ChoiceController>
 {
-    private List<Choice> _choices;        // 선택지 리스트
+    [SerializeField] private List<Choice> _choices;        // 선택지 리스트
     
     // 베란다 대화 GUI - 선택지
     [HideInInspector] public GameObject verandaChoicePanelGameObject;         // 선택지 패널 오브젝트
     [HideInInspector] public List<Button> verandaChoiceButtons;               // 선택지 버튼 리스트
+    
+    // 방 텍스트 박스 GUI - 선택지
+    [HideInInspector] public GameObject roomChoicePanelGameObject;            // 방 선택지 패널 게임 오브젝트
+    [HideInInspector] public List<Button> roomChoiceButtons;                  // 방 선택지 버튼 리스트 
 
     public bool IsDisplayedChoice
     {
@@ -22,13 +27,15 @@ public class ChoiceController : Singleton<ChoiceController>
     
     private void Start()
     {
+        CSVParser csvParser = new CSVParser();
+        
         // 선택지 데이터 파싱
         TextAsset choicesCSVFile = Resources.Load<TextAsset>("CSV/Choices");    // 경로 입력하기.
-        _choices = CSVParser.LoadDialogueChoices(choicesCSVFile);
+        _choices = csvParser.LoadDialogueChoices(choicesCSVFile);
     }
 
     // 대화의 선택지를 출력
-    public void ShowChoice(int choiceID, DialogueManager dialogueManager)
+    public void ShowChoice(int choiceID, DialogueType dialogueType, DialogueManager dialogueManager)
     {
         _isDisplayedChoice = true;
         Choice choice = _choices.Find(choice => choice.choiceID == choiceID);
@@ -37,21 +44,75 @@ public class ChoiceController : Singleton<ChoiceController>
             Debug.LogError($"다음 ID의 선택지를 찾을 수 없습니다. >> {choiceID}");
         }
 
-        for (int i = 0; i < choice.choiceElements.Count; i++)
+        switch (dialogueType)
         {
-            verandaChoiceButtons[i].GetComponentInChildren<TMP_Text>().text
-                = dialogueManager.ReplaceDialogueText(choice.choiceElements[i].choiceText);
-            int linkedDialogueID = choice.choiceElements[i].linkedDialogueID;
-            verandaChoiceButtons[i].onClick.RemoveAllListeners();
-            verandaChoiceButtons[i].onClick.AddListener(() => _isDisplayedChoice = false);
-            verandaChoiceButtons[i].onClick.AddListener(() => dialogueManager.NextDialogue(linkedDialogueID));
-            verandaChoiceButtons[i].onClick.AddListener(() => HideChoice());
-            verandaChoicePanelGameObject.SetActive(true);
+            // 방 대화창 선택지 띄우기 
+            case DialogueType.RoomDialogue:
+            case DialogueType.RoomNarration:
+                SetChoice(roomChoicePanelGameObject, roomChoiceButtons, choice, dialogueType, dialogueManager);
+                break;
+            
+            // 베란다 대화창 선택지 띄우기 
+            case DialogueType.VerandaDialogue:
+            case DialogueType.VerandaNarration:
+                SetChoice(verandaChoicePanelGameObject, verandaChoiceButtons, choice, dialogueType, dialogueManager);
+                break;
+            
+            default:
+                Debug.LogError($"씬 타입을 식별할 수 없어 선택지를 출력할 수 없습니다. 씬 타입 : {dialogueType}");
+                break;
+        }
+
+
+    }
+
+    private void HideChoice(DialogueType dialogueType)
+    {
+        switch (dialogueType)
+        {
+            // 방 대화창 선택지 닫기 
+            case DialogueType.RoomDialogue:
+            case DialogueType.RoomNarration:
+                roomChoicePanelGameObject.SetActive(false);
+                break;
+            
+            // 베란다 대화창 선택지 닫기
+            case DialogueType.VerandaDialogue:
+            case DialogueType.VerandaNarration:
+                verandaChoicePanelGameObject.SetActive(false);
+                break;
+            
+            default:
+                Debug.LogError($"씬 타입을 식별할 수 없어 출력된 선택지 패널을 닫을 수 없습니다. 씬 타입 : {dialogueType}");
+                break;
         }
     }
 
-    private void HideChoice()
+    private void SetChoice(GameObject choicePanel, List<Button> buttons, Choice choice, DialogueType dialogueType, DialogueManager dialogueManager)
     {
-        verandaChoicePanelGameObject.SetActive(false);
+        for (int i = 0; i < choice.choiceElements.Count; i++)
+        {
+            int index = i;  // Lambda 클로저 문제를 해결하기 위해 지역 변수에 값을 복사. 
+            
+            buttons[index].GetComponentInChildren<TMP_Text>().text
+                = dialogueManager.ReplaceDialogueText(choice.choiceElements[index].choiceText);
+            int linkedDialogueID = choice.choiceElements[index].linkedDialogueID;
+            buttons[index].onClick.RemoveAllListeners();
+            buttons[index].onClick.AddListener(() => _isDisplayedChoice = false);
+            buttons[index].onClick.AddListener(() => dialogueManager.NextDialogue(linkedDialogueID));
+            buttons[index].onClick.AddListener(() => HideChoice(dialogueType));
+            
+            // 선택지 선택 시 실행할 메서드 등록
+            buttons[index].onClick.AddListener(() => choice.choiceElements[index].triggerEvent.Invoke());
+            
+            // 선택지 선택 조건이 불충족이라면 Disable 
+            bool condition = choice.choiceElements[index].condition.Invoke();
+            if (!condition)
+            {
+                buttons[index].interactable = false;
+            }
+        }
+        choicePanel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
     }
 }

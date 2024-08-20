@@ -1,4 +1,6 @@
 선택지 ID,선택지 대사,선택 조건,발생 이벤트,연결된 대화 ID
 Choice ID,Choice Script,Condition,Trigger Event,Linked Dialogue ID
-1,1번 선택지이다. ,HasGift,,1
-,2번 선택지이다. ,,Work,1
+1,1번 선택지,,,2
+,2번 선택지,,,3
+2,테스트 선택지 1,,,1
+,테스트 선택지 2,,,2
