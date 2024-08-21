@@ -113,8 +113,8 @@ public class CSVParser
             ChoiceElement choiceElement = new ChoiceElement
             {
                 choiceText = values[1].Trim(),
-                condition = TextToCondition(values[2]),  // 선택지 선택 조건 델리게이트에 반환값 bool 형태의 메서드 추가  
-                triggerEvent = TextToTriggerEvent(values[3]), // 선택지 선택 시 발동 이벤트 델리게이트에 메서드 추가 
+                condition = TextToCondition(values[2].Trim()),  // 선택지 선택 조건 델리게이트에 반환값 bool 형태의 메서드 추가  
+                triggerEvent = TextToTriggerEvent(values[3].Trim()), // 선택지 선택 시 발동 이벤트 델리게이트에 메서드 추가 
                 linkedDialogueID = int.TryParse(values[4].Trim(), out int linkedDialogueID) ? linkedDialogueID : 0
             };
             currentChoice.choiceElements.Add(choiceElement);
@@ -142,7 +142,7 @@ public class CSVParser
                 break;
             
             // 선물을 소지하고 있는지 여부 
-            case "HasGift":
+            case "!HasGift":
                 condition = () => GameManager.Instance.HasGift;
                 break;
             
@@ -169,29 +169,62 @@ public class CSVParser
             
             // 대화
             // 대화 - 좋은 선택지 선택 횟수 증가 
-            case "GoodChoice":
+            case "!GoodChoice":
                 triggerEvent = () => { GameManager.Instance.GoodChoiceNumber++; };
                 break;
             
             // 대화 - 나쁜 선택지 선택 횟수 증가 
-            case "BadChoice":
+            case "!BadChoice":
                 triggerEvent = () => { GameManager.Instance.BadChoiceNumber++; };
                 break;
             
-            // 대화 - 선물 주기
-            case "Gift":
-                triggerEvent = () => { GameManager.Instance.GiveGift = true; };
+            // 대화 - 선물 구매하기 
+            case "!BuyGift":
+                triggerEvent = () => { GameManager.Instance.BuyGift(); };
                 break;
             
-            // 방 - 대화 창 닫기 
+            // 대화 - 선물 주기
+            case "!PresentGift":
+                triggerEvent = () => { GameManager.Instance.PresentGift = true; };
+                break;
             
-            // 방 - 다음 날로 ( 침대 )
+            // 대화 - 삽화 끄기 
+            case "!HideIllustration":
+                triggerEvent = () => { DialogueManager.Instance.HideIllustrationHandle(); };
+                break;
             
-            // 방 - 베란다로 ( 베란다 )
+            // 대화 - 표시 아이템 끄기
+            case "!HideDisplayItem":
+                triggerEvent = () => { DialogueManager.Instance.HideDisplayItemHandle(); };
+                break;
+            
+            // 대화 - 배경 음악 끄기
+            case "!StopMusic":
+                triggerEvent = () => { DialogueManager.Instance.StopMusicHandle(); };
+                break;
+            
+            // 방 - 다음 날로 ( 침대 사용하기 ) 
+            case "!ToNextDay":
+                triggerEvent = () => { GameManager.Instance.ToNextDay(); };
+                break;
+            
+            // 방 - 베란다로 나가기 ( 베란다 )
+            case "!ToVeranda":
+                triggerEvent = () =>
+                {
+                    SceneController.Instance.ChangeScene(SceneName.Dialogue);
+                    GameManager.Instance.DidTodayDialogue = true;
+                };
+                break;
             
             // 방 - 일하기 ( 컴퓨터 )
-            case "Work":
+            case "!Work":
                 triggerEvent = () => { GameManager.Instance.Work(); };
+                break;
+            
+            // 기타 - 5일차 All Good 판정
+            case "!Day5AllGood":
+                triggerEvent = () => { GameManager.Instance.CheckDay5AllGood(); };
                 break;
             
             // 타이틀 - 세이브파일 불러오기 
@@ -202,7 +235,7 @@ public class CSVParser
                 triggerEvent = () => { };
                 break;
         }
-
+        
         return triggerEvent;
     }
 }

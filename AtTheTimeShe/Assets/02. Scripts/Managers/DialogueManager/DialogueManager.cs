@@ -53,6 +53,16 @@ public class DialogueManager : Singleton<DialogueManager>
         _dialogueScenes = csvParser.LoadDialogues(dialoguesCSVFile);
     }
     
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    
     // 대화 시작
     public void StartDialogue(int sceneID)
     {
@@ -101,9 +111,25 @@ public class DialogueManager : Singleton<DialogueManager>
         // 대화 종료 시점 판별 로직 
         if (_currentDialogueID > _currentDialogues.Count) // 마지막 대화 ID보다 클 시
         {
-            Debug.Log($"대화 타입 : {_dialogueType}");
-            EndDialogue(); // 대화 종료
-            return;
+            // 아직 출력되지 않은 선택지가 있다면 선택지 출력하기 
+            if (_hasChoice) 
+            {
+                // 이전 대화 UI 숨기기
+                _dialogueUI?.Hide(this); 
+                
+                // 선택지 출력 로직 
+                choiceController.ShowChoice(_choiceID, _dialogueType, this);
+                Debug.Log("선택지 출력!");
+            
+                // 선택지 없음 체크 후 리턴 
+                _hasChoice = false;
+                return;
+            }
+            else
+            {
+                EndDialogue(); // 대화 종료
+                return;
+            }
         }
         
         // 현재 대화와 대사 할당
@@ -121,7 +147,8 @@ public class DialogueManager : Singleton<DialogueManager>
         // 대사에 일러스트가 존재한다면 일러스트 출력
         if (HasIllustration(dialogueElement))
         {
-            illustrationController.ShowIllustration(dialogueElement.illustrationName, _dialogueType);
+            //illustrationController.ShowIllustration(dialogueElement.illustrationName, _dialogueType);
+            illustrationController.ShowAnimationIllustration(dialogueElement.illustrationName, _dialogueType);
         }
         
         // 대사에 초상화가 존재한다면 일러스트 출력
@@ -205,7 +232,7 @@ public class DialogueManager : Singleton<DialogueManager>
         return dialogueText.Replace("@", ","); // @ -> ,로 변경 ( 추후 플레이어 이름도 변경할 예정 ) 
     }
 
-    private void EndDialogue()
+    public void EndDialogue()
     {
         _currentDialogues = null;
         
@@ -224,9 +251,48 @@ public class DialogueManager : Singleton<DialogueManager>
         switch (_dialogueType)
         {
             case DialogueType.RoomDialogue:
+            case DialogueType.RoomNarration:
+                // 방 표시 일러스트 숨기기
+                illustrationController.HideIllustration(_dialogueType);
+                break;
+            
+            case DialogueType.VerandaDialogue:
+            case DialogueType.VerandaNarration:
+                // 일러스트 숨기기
+                illustrationController.HideIllustration(_dialogueType);
+                // 초상화 숨기기
+                portraitController.HidePortrait(_dialogueType);
+                // 표시 아이템 숨기기
+                displayItemController.HideDisplayItem();
+                
+                // Room 씬으로 전환
+                SceneController.Instance.ChangeScene(SceneName.Room);
+                break;
+            
+            default:
+                break;
+        }
+
+        // 대화 창 숨기기
+        _dialogueUI?.Hide(this);
+        
+        Debug.Log("대화 종료.");
+    }
+
+    // 삽화 끄기 
+    public void HideIllustrationHandle()
+    {
+        // 대화 타입에 맞는 일러스트 숨기기 
+        switch (_dialogueType)
+        {
+            case DialogueType.RoomDialogue:
+                // 방 표시 일러스트 숨기기
+                illustrationController.HideIllustration(_dialogueType);
                 break;
             
             case DialogueType.RoomNarration:
+                // 방 표시 일러스트 숨기기
+                illustrationController.HideIllustration(_dialogueType);
                 break;
             
             case DialogueType.VerandaDialogue:
@@ -239,16 +305,29 @@ public class DialogueManager : Singleton<DialogueManager>
                 break;
             
             case DialogueType.VerandaNarration:
+                // 일러스트 숨기기
+                illustrationController.HideIllustration(_dialogueType);
+                // 초상화 숨기기
+                portraitController.HidePortrait(_dialogueType);
+                // 표시 아이템 숨기기
+                displayItemController.HideDisplayItem();
                 break;
             
             default:
                 break;
         }
+    }
 
-        // 대화 창 숨기기
-        _dialogueUI?.Hide(this);
-        
-        Debug.Log("대화 종료.");
+    // 표시 아이템 끄기 
+    public void HideDisplayItemHandle()
+    {
+        displayItemController.HideDisplayItem();
+    }
+
+    // 배경 음악 끄기 
+    public void StopMusicHandle()
+    {
+        AudioManager.Instance.StopBGM();
     }
     
     // 대화 UI 종류 선택
@@ -329,6 +408,12 @@ public class DialogueManager : Singleton<DialogueManager>
     private bool HasSFX(DialogueElement dialogueElement)
     {
         return dialogueElement.sfxName != "";
+    }
+    
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 이전 씬의 대화 흔적 처리 
+        _dialogueUI = null;
     }
 }
     

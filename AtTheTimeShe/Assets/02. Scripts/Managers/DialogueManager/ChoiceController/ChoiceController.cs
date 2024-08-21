@@ -99,11 +99,23 @@ public class ChoiceController : Singleton<ChoiceController>
             int linkedDialogueID = choice.choiceElements[index].linkedDialogueID;
             buttons[index].onClick.RemoveAllListeners();
             buttons[index].onClick.AddListener(() => _isDisplayedChoice = false);
-            buttons[index].onClick.AddListener(() => dialogueManager.NextDialogue(linkedDialogueID));
+            
+            // 연결된 대화 ID가 0이라면 선택 시, 대화 종료 
+            if (linkedDialogueID == 0)
+            {
+                buttons[index].onClick.AddListener(() => { DialogueManager.Instance.EndDialogue(); });
+
+            }
+            else
+            {
+                buttons[index].onClick.AddListener(() => dialogueManager.NextDialogue(linkedDialogueID));
+            }
+            
             buttons[index].onClick.AddListener(() => HideChoice(dialogueType));
             
             // 선택지 선택 시 실행할 메서드 등록
             buttons[index].onClick.AddListener(() => choice.choiceElements[index].triggerEvent.Invoke());
+            Debug.Log(choice.choiceElements[index].triggerEvent);
             
             // 선택지 선택 조건이 불충족이라면 Disable 
             bool condition = choice.choiceElements[index].condition.Invoke();

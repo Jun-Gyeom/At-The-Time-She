@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 15799279}
   - component: {fileID: 15799281}
   - component: {fileID: 15799280}
+  - component: {fileID: 15799282}
   m_Layer: 5
   m_Name: Display Object
   m_TagString: Untagged
@@ -155,11 +156,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1905531649}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -81}
+  m_SizeDelta: {x: 1260, y: 600}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &15799280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +199,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 15799278}
   m_CullTransparentMesh: 1
+--- !u!95 &15799282
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15799278}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f8265e49f5b40e340bd3c35eddd6dd7a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &33282576
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 33282579}
-  linkedDialogueSceneID: 0
+  linkedDialogueSceneID: 101
 --- !u!60 &33282579
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -704,7 +726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 406601265}
-  linkedDialogueSceneID: 0
+  linkedDialogueSceneID: 108
 --- !u!60 &406601265
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -878,7 +900,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 505002799}
-  linkedDialogueSceneID: 0
+  linkedDialogueSceneID: 109
+  canBuyGiftStateLinkedDialogueID: 110
 --- !u!60 &505002799
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1171,7 +1194,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 672950646}
-  linkedDialogueSceneID: 0
+  linkedDialogueSceneID: 106
+  goodStateLinkedDialogueID: 107
+  goodChoiceNumberForNeatBed: 3
 --- !u!60 &672950646
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1517,12 +1542,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35
+  m_fontSize: 40
   m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 20
-  m_fontSizeMax: 35
+  m_fontSizeMax: 40
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -2019,7 +2044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 1219843001}
-  linkedDialogueSceneID: 0
+  linkedDialogueSceneID: 105
 --- !u!60 &1219843001
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2402,7 +2427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 1447926543}
-  linkedDialogueSceneID: 0
+  linkedDialogueSceneID: 101
 --- !u!60 &1447926543
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2498,7 +2523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 1720698139}
-  linkedDialogueSceneID: 1
+  linkedDialogueSceneID: 104
 --- !u!60 &1720698139
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2674,7 +2699,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goodChoiceNumberForNeatBedding: 3
   goodChoiceNumberForCleanTrash: 3
-  randomMorningDialogueIDs: 02000000
+  randomMorningDialogueIDs: 70000000710000007200000073000000740000007500000076000000
+  day0MorningDialogueID: 1000
   neatBeddingGameObject: {fileID: 1987364967}
   noneNeatBeddingGameObject: {fileID: 360509098}
   trashGameObject: {fileID: 355388135}
@@ -2690,7 +2716,7 @@ MonoBehaviour:
   - {fileID: 3492630632062313125}
   - {fileID: 597899378}
   roomDisplayPanelGameObject: {fileID: 1905531648}
-  roomDisplayImage: {fileID: 15799280}
+  roomDisplayAnimator: {fileID: 15799282}
 --- !u!1 &1818764260
 GameObject:
   m_ObjectHideFlags: 0
@@ -3028,7 +3054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 2086271011}
-  linkedDialogueSceneID: 0
+  linkedDialogueSceneID: 105
 --- !u!60 &2086271011
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3146,8 +3172,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: {fileID: 2131199874}
-  linkedDialogueSceneID: 1
-  goodStateLinkedDialogueID: 2
+  linkedDialogueSceneID: 102
+  goodStateLinkedDialogueID: 103
   goodChoiceNumberForCleanRefrigerator: 3
 --- !u!60 &2131199874
 PolygonCollider2D:

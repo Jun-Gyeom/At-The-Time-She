@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Day 0
   m_EditorClassIdentifier: 
   date: 0
-  currentDateDialogueSceneID: 1
+  currentDateDialogueSceneID: 1001

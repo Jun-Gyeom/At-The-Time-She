@@ -6,6 +6,7 @@ public class Trash : RoomObject
 {
     public override void Interact()
     {
-        Debug.Log("쓰레기가 있다.");
+        // 대사 출력 
+        DialogueManager.Instance.StartDialogue(linkedDialogueSceneID);
     }
 }

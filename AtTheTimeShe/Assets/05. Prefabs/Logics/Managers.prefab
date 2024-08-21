@@ -305,8 +305,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0b081eff2bd6d24458acc7c3b8742cc6, type: 2}
   - {fileID: 11400000, guid: 8d47d11ebac394044b602fa7eefc9cad, type: 2}
   - {fileID: 11400000, guid: b8a960da95418154bb56209b8ab5a8f4, type: 2}
-  - {fileID: 11400000, guid: e802160ab054f4f4da8aa17db3959f5c, type: 2}
-  workNumberForHasGift: 0
+  workNumberForHasGift: 4
+  checkEndingDay: 5
+  trueEnding: {fileID: 11400000, guid: b0e86a1d321827844b070a36585ecbb9, type: 2}
+  happyEnding: {fileID: 11400000, guid: 57395918b0c3c4c4cb0cfea036acf536, type: 2}
+  normalEnding: {fileID: 11400000, guid: 1a6e3a8aa4d5d45439486e7493a9e73e, type: 2}
+  bedEnding: {fileID: 11400000, guid: 8e03d1c9f9328984cbab12def13ba1f2, type: 2}
+  realBadEnding: {fileID: 11400000, guid: 164595205a40a864bb55c692a03e7350, type: 2}
 --- !u!1 &4575582449302253171
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,6 +543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a4e87817bd1ff479597d03053b649d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _choices: []
   verandaChoicePanelGameObject: {fileID: 0}
   verandaChoiceButtons: []
   roomChoicePanelGameObject: {fileID: 0}
@@ -555,9 +561,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verandaIllustrationGameObject: {fileID: 0}
-  verandaIllustrationImage: {fileID: 0}
+  verandaIllustrationAnimator: {fileID: 0}
   roomDisplayImagePanelGameObject: {fileID: 0}
-  roomDisplayImage: {fileID: 0}
+  roomIllustrationAnimator: {fileID: 0}
 --- !u!114 &5532090499169320401
 MonoBehaviour:
   m_ObjectHideFlags: 0

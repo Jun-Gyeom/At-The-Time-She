@@ -8,12 +8,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public enum Scene
+public enum SceneName
 {
     Title,
     Room,
-    Dialogue,
-    Ending
+    Dialogue
 }
 public class SceneController : Singleton<SceneController>
 {
@@ -41,15 +40,15 @@ public class SceneController : Singleton<SceneController>
         _waitForFading = new WaitForSeconds(fadingDuration);
     }
 
-    public void ChangeScene(Scene scene)
+    public void ChangeScene(SceneName sceneName)
     {
         if (IsSceneChanging) return;
 
-        StartCoroutine(HandleSceneChange(scene));
+        StartCoroutine(HandleSceneChange(sceneName));
     }
 
     // 씬 전환 코루틴 
-    private IEnumerator HandleSceneChange(Scene scene)
+    private IEnumerator HandleSceneChange(SceneName sceneName)
     {
         IsSceneChanging = true;
 
@@ -58,10 +57,10 @@ public class SceneController : Singleton<SceneController>
         yield return _waitForFadeInOut;
 
         // 씬 비동기 로딩 
-        yield return StartCoroutine(LoadSceneAsync(scene));
+        yield return StartCoroutine(LoadSceneAsync(sceneName));
         
         // Room 씬이라면 날짜 텍스트 띄우기 
-        if (scene == Scene.Room)
+        if (sceneName == SceneName.Room)
         {
             // 조금 대기
             yield return new WaitForSeconds(0.75f);
@@ -74,7 +73,7 @@ public class SceneController : Singleton<SceneController>
         yield return _waitForFading;
 
         // 띄웠던 날짜 텍스트 숨기기
-        if (scene == Scene.Room)
+        if (sceneName == SceneName.Room)
         {
             HideDateText();
             yield return new WaitForSeconds(dateTextOutAnimationDuration);
@@ -92,12 +91,12 @@ public class SceneController : Singleton<SceneController>
     }
     
 
-    private IEnumerator LoadSceneAsync(Scene scene)
+    private IEnumerator LoadSceneAsync(SceneName sceneName)
     {
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync((int)scene);
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync((int)sceneName);
         if (asyncOperation == null)
         {
-            Debug.LogError($"존재하지 않는 씬 번호입니다. : {(int)scene}");
+            Debug.LogError($"존재하지 않는 씬 번호입니다. : {(int)sceneName}");
         }
         asyncOperation.allowSceneActivation = false;
 

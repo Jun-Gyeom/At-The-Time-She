@@ -6,6 +6,7 @@ public class Poster : RoomObject
 {
     public override void Interact()
     {
-        Debug.Log("포스터 로직 구현하기");
+        // 대사 출력 
+        DialogueManager.Instance.StartDialogue(linkedDialogueSceneID);
     }
 }

@@ -18,7 +18,7 @@ public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
     // 게임 시작 버튼 이벤트에 등록 
     public void StartGame()
     {
-        SceneController.Instance.ChangeScene(Scene.Room);
+        SceneController.Instance.ChangeScene(SceneName.Room);
     }
 
     // 설정 버튼 이벤트에 등록 

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Day 2
   m_EditorClassIdentifier: 
   date: 2
-  linkedDialogueSceneID: 3
+  currentDateDialogueSceneID: 1020

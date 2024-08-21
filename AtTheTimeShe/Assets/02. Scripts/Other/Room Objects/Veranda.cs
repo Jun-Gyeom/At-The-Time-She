@@ -6,8 +6,12 @@ public class Veranda : RoomObject
 {
     public override void Interact()
     {
+        DialogueManager.Instance.StartDialogue(linkedDialogueSceneID);
+        
+        /*
         GameManager.Instance.DidTodayDialogue = true;
         
-        SceneController.Instance.ChangeScene(Scene.Dialogue);
+        SceneController.Instance.ChangeScene(SceneName.Dialogue);
+        */
     }
 }
