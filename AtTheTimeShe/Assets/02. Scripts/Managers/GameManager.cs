@@ -14,11 +14,13 @@ public class GameManager : Singleton<GameManager>
     public PlayerState playerState = PlayerState.None;  // 플레이어 상태
     public int Date { get; set; }                       // 게임 날짜
     public bool DidTodayDialogue { get; set; }          // 오늘 대화를 진행하였는지 여부 
+    public bool DidTodayWork { get; set; }              // 오늘 컴퓨터로 일을 하였는지 여부
     public int GoodChoiceNumber { get; set; }           // 좋은 선택 횟수 
     public int BadChoiceNumber { get; set; }            // 나쁜 선택 횟수
     public bool PresentGift { get; set; }               // 선물을 주었는지 여부 
     public bool HasGift { get; set; }                   // 선물을 소지하고 있는지 여부 
     public int WorkNumber { get; set; }                 // 컴퓨터로 일한 횟수
+    public int BedEndingCount { get; set; }             // 침대 엔딩 조건 카운트 
     public SceneName CurrentSceneBuildIndex { get; private set; } // 현재 씬
     public Ending SelectedEnding { get; private set; }  // 결정된 게임 엔딩 
 
@@ -26,6 +28,7 @@ public class GameManager : Singleton<GameManager>
     public List<Date> dates;                            // 날짜 리스트 
     public int workNumberForHasGift;                    // 선물을 얻기 위해 필요한 일한 횟수 
     public int checkEndingDay;                          // 엔딩 조건을 판별할 날짜 
+    public int endingDay;                               // 엔딩을 플레이할 날짜 
 
     [Header("Ending")] 
     public TrueEnding trueEnding;                       // 진 엔딩
@@ -44,12 +47,6 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            SceneController.Instance.ChangeScene(SceneName.Title);
-        }
-        
-        
         // 마우스 포인터 오브젝트 감지 
         CheckOnPointObject();
 
@@ -110,11 +107,41 @@ public class GameManager : Singleton<GameManager>
         // 날짜 1 증가 
         Date += 1;
         
+        // 대화 이전에 침대를 사용했는지 확인 
+        if (!DidTodayDialogue) 
+        {
+            // 침대 엔딩 조건 카운트 + 1
+            BedEndingCount++;
+            
+            // 침대 엔딩 조건이 충족되었는지 확인
+            if (bedEnding.CheckEndingCondition())
+            {
+                // 침대 엔딩 결정 
+                SelectedEnding = bedEnding;
+                
+                // Ending 씬 로드
+                SceneController.Instance.ChangeScene(SceneName.Ending);
+                return;
+            }
+        }
+        
         // 오늘 대화 여부 초기화
         DidTodayDialogue = false;
 
-        // Room 씬 로드
-        SceneController.Instance.ChangeScene(SceneName.Room);
+        // 오늘 일 여부 초기화 
+        DidTodayWork = false;
+
+        // 엔딩을 보여줄 날인지 확인 
+        if (Date == endingDay)
+        {
+            // Ending 씬 로드
+            SceneController.Instance.ChangeScene(SceneName.Ending);
+        }
+        else
+        {
+            // Room 씬 로드
+            SceneController.Instance.ChangeScene(SceneName.Room);
+        }
     }
 
     // 컴퓨터로 일하는 메서드 
@@ -122,6 +149,9 @@ public class GameManager : Singleton<GameManager>
     {
         // 일한 횟수 증가 
         WorkNumber++;
+        
+        // 오늘 일 완료 여부 참으로 변경 
+        DidTodayWork = true; 
         
         Debug.Log($"일을 완료했습니다! 일한 횟수 : {WorkNumber}");
     }
@@ -148,6 +178,43 @@ public class GameManager : Singleton<GameManager>
             // ------------------------( 여기 파라미터를 5일차 All Good 대화 시작 지점 대화 ID 적으면 됨. ) 
             DialogueManager.Instance.NextDialogue(1 );
         }
+    }
+    
+    // 게임 데이터 초기화 
+    public void InitializeGameData()
+    {
+        // 플레이어 상태 초기화 
+        playerState = PlayerState.None;
+        
+        // 게임 날짜 초기화 
+        Date = 0;
+        
+        // 오늘 대화를 진행하였는지 여부 초기화 
+        DidTodayDialogue = false;
+
+        // 오늘 컴퓨터로 일을 하였는지 여부 초기화 
+        DidTodayWork = false;
+
+        // 좋은 선택 횟수 초기화 
+        GoodChoiceNumber = 0;
+
+        // 나쁜 선택 횟수 초기화 
+        BadChoiceNumber = 0;
+
+        // 선물을 주었는지 여부 초기화 
+        PresentGift = false;
+
+        // 선물을 소지하고 있는지 여부 초기화 
+        HasGift = false;
+
+        // 컴퓨터로 일한 횟수 초기화 
+        WorkNumber = 0;
+
+        // 침대 엔딩 조건 카운트 초기화 
+        BedEndingCount = 0;
+
+        // 결정된 게임 엔딩 초기화 
+        SelectedEnding = null;
     }
 
     private void OnEnable()
@@ -191,28 +258,25 @@ public class GameManager : Singleton<GameManager>
         
         // 엔딩 체크하기
         // 진 엔딩 조건 체크 ( 옆집 누나 ) 
-        if (GoodChoiceNumber > BadChoiceNumber && 
-            BadChoiceNumber == 0 && 
-            PresentGift)
+        if (trueEnding.CheckEndingCondition())
         {
             ending = trueEnding;
         }
         
         // 해피 엔딩 조건 체크 ( 친한 누나 )
-        else if (GoodChoiceNumber > BadChoiceNumber)
+        else if (happyEnding.CheckEndingCondition())
         {
             ending = happyEnding;
         }
         
         // 노멀 엔딩 조건 체크 ( 그저 그런.. )
-        else if (BadChoiceNumber >= GoodChoiceNumber)
+        else if (normalEnding.CheckEndingCondition())
         {
             ending = normalEnding;
         }
         
         // 진짜 베드 엔딩 조건 체크 ( 손절이야 )
-        else if (BadChoiceNumber > GoodChoiceNumber &&
-                 GoodChoiceNumber == 0)
+        else if (realBadEnding.CheckEndingCondition())
         {
             ending = realBadEnding;
         }
@@ -238,13 +302,17 @@ public class GameManager : Singleton<GameManager>
         // 현재 씬 정보 업데이트 
         CurrentSceneBuildIndex = (SceneName)scene.buildIndex;
 
-        // 엔딩 조건 판정 날짜인지 확인 
-        if (Date == checkEndingDay)
+        // 이미 결정된 엔딩이 없는지 확인
+        if (SelectedEnding == null)
         {
-            // 엔딩 조건 판정 
-            SelectedEnding = CheckEnding();
+            // 엔딩 조건 판정 날짜인지 확인 
+            if (Date == checkEndingDay)
+            {
+                // 엔딩 조건 판정 
+                SelectedEnding = CheckEnding();
             
-            Debug.Log($"결정된 게임 엔딩 : {SelectedEnding}");
+                Debug.Log($"결정된 게임 엔딩 : {SelectedEnding}");
+            }
         }
     }
 }

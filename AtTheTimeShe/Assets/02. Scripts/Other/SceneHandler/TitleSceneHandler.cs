@@ -13,6 +13,12 @@ public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
     {
         // 플레이어 상태 None으로 변경. 
         GameManager.Instance.playerState = GameManager.PlayerState.None;
+        
+        // 타이틀 배경음악 재생
+        AudioManager.Instance.PlayBGM("Title_BGM");
+        
+        // 게임 데이터 초기화 
+        GameManager.Instance.InitializeGameData();
     }
 
     // 게임 시작 버튼 이벤트에 등록 
@@ -49,3 +55,4 @@ public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
         Application.Quit();
     }
 }
+

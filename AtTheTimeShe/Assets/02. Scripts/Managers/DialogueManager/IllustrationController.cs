@@ -28,6 +28,7 @@ public class IllustrationController : Singleton<IllustrationController>
                 break;
             
             case DialogueType.VerandaDialogue:
+            case DialogueType.VerandaNarration:
                 verandaIllustrationGameObject.SetActive(true);
                 verandaIllustrationAnimator.Play(illustrationName);
                 break;

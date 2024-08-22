@@ -12,7 +12,8 @@ public enum SceneName
 {
     Title,
     Room,
-    Dialogue
+    Dialogue,
+    Ending
 }
 public class SceneController : Singleton<SceneController>
 {
@@ -43,6 +44,9 @@ public class SceneController : Singleton<SceneController>
     public void ChangeScene(SceneName sceneName)
     {
         if (IsSceneChanging) return;
+        
+        // 배경음악 중지
+        AudioManager.Instance.StopBGM();
 
         StartCoroutine(HandleSceneChange(sceneName));
     }
@@ -59,12 +63,13 @@ public class SceneController : Singleton<SceneController>
         // 씬 비동기 로딩 
         yield return StartCoroutine(LoadSceneAsync(sceneName));
         
-        // Room 씬이라면 날짜 텍스트 띄우기 
-        if (sceneName == SceneName.Room)
+        // Room 씬이며 베란다 대화 이전인지 또는 Ending 씬인지 확인 
+        if ((sceneName == SceneName.Room && !GameManager.Instance.DidTodayDialogue) || sceneName == SceneName.Ending)
         {
             // 조금 대기
             yield return new WaitForSeconds(0.75f);
             
+            // 날짜 텍스트 띄우기 
             ShowDateText();
             yield return new WaitForSeconds(dateTextInAnimationDuration);
         }
@@ -73,7 +78,7 @@ public class SceneController : Singleton<SceneController>
         yield return _waitForFading;
 
         // 띄웠던 날짜 텍스트 숨기기
-        if (sceneName == SceneName.Room)
+        if ((sceneName == SceneName.Room && !GameManager.Instance.DidTodayDialogue) || sceneName == SceneName.Ending)
         {
             HideDateText();
             yield return new WaitForSeconds(dateTextOutAnimationDuration);

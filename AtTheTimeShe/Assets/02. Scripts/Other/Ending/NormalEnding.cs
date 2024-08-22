@@ -11,8 +11,16 @@ public class NormalEnding : Ending
     public override void Play()
     {
         Debug.Log("노멀엔딩 플레이!");
+        
+        // 노멀 엔딩 플레이
+        DialogueManager.Instance.StartDialogue(endingDialogueSceneID);
     }
-    
+
+    public override bool CheckEndingCondition()
+    {
+        return GameManager.Instance.BadChoiceNumber >= GameManager.Instance.GoodChoiceNumber;
+    }
+
     public override void PlayTrailerDialogue()
     {
         DialogueManager.Instance.StartDialogue(endingTrailerDialogueSceneID);

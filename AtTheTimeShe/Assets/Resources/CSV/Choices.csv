@@ -12,12 +12,12 @@ Choice ID,Choice Script,Condition,Trigger Event,Linked Dialogue ID
 ,평소에 뭐 안 해요...,,!BadChoice ,12
 6,야...?,,!BadChoice ,39
 ,누...누나...?,,!GoodChoice,47
-7,하루에 한 갑 정도...?,,!GoodChoice,16
-,하루에 다섯 갑 정도...?,,!BadChoice ,20
-8,무슨 밴드 노래 들어요?,,!GoodChoice,71
-,...,,!BadChoice ,106
+7,하루에 한 갑 정도...?,,!GoodChoice,17
+,하루에 다섯 갑 정도...?,,!BadChoice ,21
+8,무슨 밴드 노래 들어요?,,!GoodChoice,72
+,...,,!BadChoice ,107
 9,알바 따위 수십 개도 해봤죠~,,!BadChoice ,52
-,예전에 몇 가지 정도는 해 봤어요.,,!GoodChoice,59
+,예전에 몇 가지 정도는 해 봤어요.,,!GoodChoice,56
 10,약간...디자인 같은 쪽 아니에요?,,!GoodChoice,25
 ,솔직히 대학교 안 나오셨을꺼 같은데...,,!BadChoice ,42
 11,대학생 때...,,!GoodChoice,91

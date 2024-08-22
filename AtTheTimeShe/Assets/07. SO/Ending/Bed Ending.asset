@@ -16,3 +16,4 @@ MonoBehaviour:
   endingEnglishName: In Love with My Bed
   isUnlocked: 0
   endingDialogueSceneID: 1070
+  bedEndingCountForEndingCondition: 3

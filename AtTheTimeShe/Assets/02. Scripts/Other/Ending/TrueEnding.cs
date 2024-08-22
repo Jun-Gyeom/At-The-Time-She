@@ -11,6 +11,16 @@ public class TrueEnding : Ending
     public override void Play()
     {
         Debug.Log("진엔딩 플레이!");
+        
+        // 진 엔딩 플레이 
+        DialogueManager.Instance.StartDialogue(endingDialogueSceneID);
+    }
+
+    public override bool CheckEndingCondition()
+    {
+        return GameManager.Instance.GoodChoiceNumber > GameManager.Instance.BadChoiceNumber &&
+               GameManager.Instance.BadChoiceNumber == 0 &&
+               GameManager.Instance.PresentGift;
     }
 
     public override void PlayTrailerDialogue()

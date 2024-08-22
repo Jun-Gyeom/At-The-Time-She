@@ -307,6 +307,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b8a960da95418154bb56209b8ab5a8f4, type: 2}
   workNumberForHasGift: 4
   checkEndingDay: 5
+  endingDay: 7
   trueEnding: {fileID: 11400000, guid: b0e86a1d321827844b070a36585ecbb9, type: 2}
   happyEnding: {fileID: 11400000, guid: 57395918b0c3c4c4cb0cfea036acf536, type: 2}
   normalEnding: {fileID: 11400000, guid: 1a6e3a8aa4d5d45439486e7493a9e73e, type: 2}

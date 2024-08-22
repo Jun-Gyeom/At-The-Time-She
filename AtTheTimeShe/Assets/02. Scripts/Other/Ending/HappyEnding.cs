@@ -11,8 +11,16 @@ public class HappyEnding : Ending
     public override void Play()
     {
         Debug.Log("해피엔딩 플레이!");
+        
+        // 해피 엔딩 플레이
+        DialogueManager.Instance.StartDialogue(endingDialogueSceneID);
     }
-    
+
+    public override bool CheckEndingCondition()
+    {
+        return GameManager.Instance.GoodChoiceNumber > GameManager.Instance.BadChoiceNumber;
+    }
+
     public override void PlayTrailerDialogue()
     {
         DialogueManager.Instance.StartDialogue(endingTrailerDialogueSceneID);

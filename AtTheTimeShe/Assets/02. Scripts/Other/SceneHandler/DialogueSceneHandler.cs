@@ -38,16 +38,9 @@ public class DialogueSceneHandler : MonoBehaviour, ISceneInitializer
         InitializeScene();
         
         // 해당 날짜의 대화 시작 메서드를 페이드아웃 종료시 실행되는 이벤트에 구독 
-        // 엔딩
-        if (GameManager.Instance.Date == 7)
-        {
-            // 엔딩 재생 메서드를 페이드아웃 종료시 실행되는 이벤트에 구독
-            SceneController.Instance.OnFadeComplate += 
-                () => { GameManager.Instance.PlayEnding(GameManager.Instance.SelectedEnding); };
-        }
-        
-        // 엔딩 암시 대화 
-        else if (GameManager.Instance.Date == 6)
+
+        // 엔딩 암시 대화
+        if (GameManager.Instance.Date == 6)
         {
             SceneController.Instance.OnFadeComplate += GameManager.Instance.SelectedEnding.PlayTrailerDialogue;
         }
@@ -90,10 +83,5 @@ public class DialogueSceneHandler : MonoBehaviour, ISceneInitializer
     private void StartTodayDialogue()
     {
         DialogueManager.Instance.StartDialogue(GameManager.Instance.dates.Find(date => date.date == GameManager.Instance.Date).currentDateDialogueSceneID);
-    }
-
-    private void StartEndingDialogue()
-    {
-        
     }
 }

@@ -265,8 +265,21 @@ public class DialogueManager : Singleton<DialogueManager>
                 // 표시 아이템 숨기기
                 displayItemController.HideDisplayItem();
                 
-                // Room 씬으로 전환
-                SceneController.Instance.ChangeScene(SceneName.Room);
+                // 현재 씬 확인
+                // 현재 씬이 Dialogue 씬인지 확인
+                if (GameManager.Instance.CurrentSceneBuildIndex == SceneName.Dialogue)
+                {
+                    // Room 씬으로 전환
+                    SceneController.Instance.ChangeScene(SceneName.Room);
+                }
+                
+                // 현재 씬이 Ending 씬인지 확인
+                if (GameManager.Instance.CurrentSceneBuildIndex == SceneName.Ending)
+                {
+                    // Title 씬으로 전환
+                    SceneController.Instance.ChangeScene(SceneName.Title);
+                }
+
                 break;
             
             default:

@@ -11,6 +11,8 @@ public class RealBadEnding : Ending
     
     public override void Play()
     {
+        Debug.Log("진짜 배드 엔딩 플레이!");
+        
         ProcessStartInfo processInfo = new ProcessStartInfo();
         
         // 현재 운영체제가 Windows인지 확인 
@@ -47,5 +49,11 @@ public class RealBadEnding : Ending
         
         // 게임을 종료 
         Application.Quit();
+    }
+
+    public override bool CheckEndingCondition()
+    {
+        return GameManager.Instance.BadChoiceNumber > GameManager.Instance.GoodChoiceNumber &&
+               GameManager.Instance.GoodChoiceNumber == 0;
     }
 }
