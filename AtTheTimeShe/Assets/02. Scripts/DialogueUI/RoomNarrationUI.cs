@@ -6,7 +6,9 @@ public class RoomNarrationUI : IDialogueUI
 {
     public void Display(Dialogue dialogue, DialogueElement dialogueElement, DialogueManager dialogueManager)
     {
-        dialogueManager.roomNarrationText.text = dialogueManager.ReplaceDialogueText(dialogueElement.dialogueText);     // 방 나레이션 텍스트 적용 
+        // 방 나레이션 텍스트 DOTween 타이핑 시작 
+        DialogueManager.Instance.StartTypingEffect(dialogueManager.roomNarrationText, dialogueManager.ReplaceDialogueText(dialogueElement.dialogueText));
+
         dialogueManager.roomNarrationTextPanelGameObject.SetActive(true);               // 방 나레이션 패널 활성화 
     }
 

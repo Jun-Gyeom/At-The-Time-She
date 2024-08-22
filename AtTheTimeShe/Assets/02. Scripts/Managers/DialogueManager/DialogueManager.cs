@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using DG.Tweening;
 
 // DialogueScene(대화 씬)들을 관리하는 클래스 
 public class DialogueManager : Singleton<DialogueManager>
@@ -15,6 +16,8 @@ public class DialogueManager : Singleton<DialogueManager>
     public PortraitController portraitController;                             // 초상화 컨트롤러 
     public DisplayItemController displayItemController;                       // 표시 아이템 컨트롤러
     public ChoiceController choiceController;                                 // 선택지 컨트롤러
+
+    public float typingSpeed;                                                 // 글자 당 타이핑 속도 
     
     // 베란다 대화창 GUI
     // 베란다 대화창 GUI - 대화 
@@ -43,6 +46,8 @@ public class DialogueManager : Singleton<DialogueManager>
     private bool _hasCharacterPortrait;           // 현재 대사의 초상화 존재 여부
     private DialogueType _dialogueType;           // 대화 씬 종류
     private IDialogueUI _dialogueUI;              // 현재 대사의 대화 UI 종류
+    private bool _isTyping;                       // 타이핑 중인지 여부 
+    private Tween _typingTween;                   // 대화 타이핑 트윈 
     
     private void Start()
     {
@@ -87,6 +92,14 @@ public class DialogueManager : Singleton<DialogueManager>
     // 다음 대화 실행
     public void NextDialogue(int dialogueID = -1)
     {
+        // 타이핑 중인지 확인 
+        if (_isTyping)
+        {
+            // 타이핑 스킵 
+            SkipTypingEffect();
+            return;
+        }
+        
         if (_currentDialogues == null) // 대화 시작 여부
         {
             Debug.Log("대화 리스트가 비어있습니다.");
@@ -290,6 +303,30 @@ public class DialogueManager : Singleton<DialogueManager>
         _dialogueUI?.Hide(this);
         
         Debug.Log("대화 종료.");
+    }
+
+    // 대사 타이핑 시작 
+    public void StartTypingEffect(TMP_Text dialogueText, string fullDialogue)
+    {
+        // 타이핑 여부 참으로 변경 
+        _isTyping = true;
+
+        // 텍스트 초기화 
+        dialogueText.text = "";
+
+        // 타이핑 트윈 시작 
+        _typingTween = dialogueText.DOText(fullDialogue, fullDialogue.Length * typingSpeed)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => _isTyping = false);
+    }
+
+    // 대사 타이핑 스킵 
+    private void SkipTypingEffect()
+    {
+        if (_typingTween != null && _typingTween.IsPlaying())
+        {
+            _typingTween.Complete();
+        }
     }
 
     // 삽화 끄기 

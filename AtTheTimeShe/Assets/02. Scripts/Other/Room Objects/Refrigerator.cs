@@ -10,8 +10,6 @@ public class Refrigerator : RoomObject
 
     [Header("Setting")] 
     public int goodChoiceNumberForCleanRefrigerator;    // 깨끗한 냉장고 상태를 위한 좋은 선택 갯수 
-
-    private bool _isGoodState;
     public override void Interact()
     {
         // 침대 엔딩 바로 전날인지 확인
@@ -23,7 +21,7 @@ public class Refrigerator : RoomObject
         else
         {
             // 냉장고 상태가 좋을 때 
-            if (_isGoodState)
+            if (GameManager.Instance.IsGoodStateOfRefrigerator)
             {
                 DialogueManager.Instance.StartDialogue(goodStateLinkedDialogueID);
             }
@@ -45,7 +43,7 @@ public class Refrigerator : RoomObject
             if (GameManager.Instance.GoodChoiceNumber >= goodChoiceNumberForCleanRefrigerator)
             {
                 // 좋은 상태로 변경
-                _isGoodState = true;
+                GameManager.Instance.IsGoodStateOfRefrigerator = true;
             }
         }
     }

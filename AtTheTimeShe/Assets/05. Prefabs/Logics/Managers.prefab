@@ -522,6 +522,7 @@ MonoBehaviour:
   portraitController: {fileID: 6075836976194766822}
   displayItemController: {fileID: 5532090499169320401}
   choiceController: {fileID: 3502523500264115029}
+  typingSpeed: 0.05
   verandaDialoguePanelGameObject: {fileID: 0}
   verandaTalkerText: {fileID: 0}
   verandaDialogueText: {fileID: 0}

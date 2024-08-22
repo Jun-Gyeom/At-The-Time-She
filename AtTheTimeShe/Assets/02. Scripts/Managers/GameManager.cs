@@ -15,6 +15,9 @@ public class GameManager : Singleton<GameManager>
     public int Date { get; set; }                       // 게임 날짜
     public bool DidTodayDialogue { get; set; }          // 오늘 대화를 진행하였는지 여부 
     public bool DidTodayWork { get; set; }              // 오늘 컴퓨터로 일을 하였는지 여부
+    public bool IsGoodStateOfBed { get; set; }          // 침대가 정돈된 상태인지 여부 
+    public bool IsGoodStateOfTrash { get; set; }        // 쓰레기가 청소된 상태인지 여부
+    public bool IsGoodStateOfRefrigerator { get; set; } // 냉장고가 깨끗한 상태인지 여부 
     public int GoodChoiceNumber { get; set; }           // 좋은 선택 횟수 
     public int BadChoiceNumber { get; set; }            // 나쁜 선택 횟수
     public bool PresentGift { get; set; }               // 선물을 주었는지 여부 
@@ -194,6 +197,15 @@ public class GameManager : Singleton<GameManager>
 
         // 오늘 컴퓨터로 일을 하였는지 여부 초기화 
         DidTodayWork = false;
+        
+        // 침대 정돈된 상태인지 여부 초기화
+        IsGoodStateOfBed = false;
+        
+        // 쓰레기 청소된 상태인지 여부 초기화
+        IsGoodStateOfTrash = false;
+        
+        // 냉장고 깨끗한 상태인지 여부 초기화
+        IsGoodStateOfRefrigerator = false;
 
         // 좋은 선택 횟수 초기화 
         GoodChoiceNumber = 0;

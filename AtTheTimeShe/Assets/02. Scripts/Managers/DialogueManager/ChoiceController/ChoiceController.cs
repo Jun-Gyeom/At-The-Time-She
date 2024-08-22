@@ -94,8 +94,8 @@ public class ChoiceController : Singleton<ChoiceController>
         {
             int index = i;  // Lambda 클로저 문제를 해결하기 위해 지역 변수에 값을 복사. 
             
-            buttons[index].GetComponentInChildren<TMP_Text>().text
-                = dialogueManager.ReplaceDialogueText(choice.choiceElements[index].choiceText);
+            buttons[index].GetComponentInChildren<TMP_Text>().text =
+                dialogueManager.ReplaceDialogueText(choice.choiceElements[index].choiceText);
             int linkedDialogueID = choice.choiceElements[index].linkedDialogueID;
             buttons[index].onClick.RemoveAllListeners();
             buttons[index].onClick.AddListener(() => _isDisplayedChoice = false);
@@ -121,7 +121,13 @@ public class ChoiceController : Singleton<ChoiceController>
             bool condition = choice.choiceElements[index].condition.Invoke();
             if (!condition)
             {
+                buttons[index].GetComponentInChildren<TMP_Text>().color = new Color(0.15f, 0.15f, 0.15f);
                 buttons[index].interactable = false;
+            }
+            else
+            {
+                buttons[index].GetComponentInChildren<TMP_Text>().color = new Color(1f, 1f, 1f);
+                buttons[index].interactable = true;
             }
         }
         choicePanel.SetActive(true);

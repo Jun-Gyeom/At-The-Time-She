@@ -34,7 +34,6 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
     
     public GameObject roomDisplayPanelGameObject;   // 방 표시 이미지 패널 게임 오브젝트
     public Animator roomDisplayAnimator;            // 방 표시 이미지 애니메이터 
-    
     private void Start()
     {
         InitializeScene();
@@ -44,6 +43,9 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
     {
         // 플레이어 상태 Room으로 변경. 
         GameManager.Instance.playerState = GameManager.PlayerState.Room;
+        
+        // 방 상태 출력 
+        ShowRoomState();
         
         // 베란다에서 대화를 진행하였는지 확인
         // 대화 이후 ( 저녁 )
@@ -55,8 +57,8 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
         // 대화하기 이전 ( 아침 )
         else
         {
-            // 방 상태 업데이트 
-            UpdateRoomState();
+            // 방 상태 체크 
+            CheckRoomState();
             
             // Day 0인지 확인
             if (GameManager.Instance.Date == 0)
@@ -93,23 +95,37 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
         IllustrationController.Instance.roomIllustrationAnimator = roomDisplayAnimator;
     }
 
-    // 방 상태 업데이트 메서드 
-    private void UpdateRoomState()
+    // 방 상태 출력 
+    private void ShowRoomState()
     {
-        Debug.Log("방 정리!");
-        int goodChoiceNumber = GameManager.Instance.GoodChoiceNumber;
-        
+        Debug.Log("방 출력!");
+
         // 이불 정돈
-        if (goodChoiceNumber >= goodChoiceNumberForNeatBedding)
+        if (GameManager.Instance.IsGoodStateOfBed)
         {
             noneNeatBeddingGameObject.SetActive(false);
             neatBeddingGameObject.SetActive(true);
         }
         
         // 쓰레기 청소 
-        bool trashActive = !(goodChoiceNumber >= goodChoiceNumberForCleanTrash);
-        trashGameObject.SetActive(trashActive);
-        trashColliderGameObject.SetActive(trashActive);
+        trashGameObject.SetActive(GameManager.Instance.IsGoodStateOfTrash);
+        trashColliderGameObject.SetActive(GameManager.Instance.IsGoodStateOfTrash);
+    }
+
+    // 방 상태 확인하여 상태 변경 
+    private void CheckRoomState()
+    {
+        // 이불 정돈 조건이 만족됐는지 확인 
+        if (GameManager.Instance.GoodChoiceNumber >= goodChoiceNumberForNeatBedding)
+        {
+            GameManager.Instance.IsGoodStateOfBed = true;
+        }
+        
+        // 쓰레기 청소 조건이 만족됐는지 확인 
+        if (GameManager.Instance.GoodChoiceNumber >= goodChoiceNumberForCleanTrash)
+        {
+            GameManager.Instance.IsGoodStateOfTrash = true;
+        }
     }
 
     private void RandomMorningDialogue()
