@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -47,15 +48,22 @@ public class DialogueManager : Singleton<DialogueManager>
     private DialogueType _dialogueType;           // 대화 씬 종류
     private IDialogueUI _dialogueUI;              // 현재 대사의 대화 UI 종류
     private bool _isTyping;                       // 타이핑 중인지 여부 
+    private bool _isPlayingTypingEffect;          // 타이핑 효과음이 재생 중인지 여부 
     private Tween _typingTween;                   // 대화 타이핑 트윈 
+    private WaitForSeconds _waitForTypingSoundEffect;   
     
-    private void Start()
+    private new void Awake()
     {
+        base.Awake();
+        
         CSVParser csvParser = new CSVParser();
         
         // 대화 씬 데이터 파싱
         TextAsset dialoguesCSVFile = Resources.Load<TextAsset>("CSV/Dialogues");  // 경로 입력하기.
         _dialogueScenes = csvParser.LoadDialogues(dialoguesCSVFile);
+        
+        // 타이핑 효과음 대기 시간 캐싱
+        _waitForTypingSoundEffect = new WaitForSeconds(typingSpeed);
     }
     
     void OnEnable()
@@ -85,7 +93,7 @@ public class DialogueManager : Singleton<DialogueManager>
         _currentDialogueID = 1;                         // 현재 대화 ID 초기화
         _currentScriptIndex = 0;                        // 현재 대사 인덱스 초기화
         _hasChoice = false;                             // 선택지 출력시킬지 여부 초기화
-        
+
         NextDialogue();
     }
 
@@ -157,11 +165,31 @@ public class DialogueManager : Singleton<DialogueManager>
         // 대화 타입 대입 
         _dialogueType = dialogue.dialogueType;
         
+        // 이전 대화 UI 숨기기
+        _dialogueUI?.Hide(this); 
+        
+        if (_hasChoice) // 선택지 출력할지 여부 검사
+        {
+            // 선택지 출력 로직 
+            choiceController.ShowChoice(_choiceID, _dialogueType, this);
+            Debug.Log("선택지 출력!");
+            
+            _hasChoice = false;
+            return;
+        }
+        
         // 대사에 일러스트가 존재한다면 일러스트 출력
         if (HasIllustration(dialogueElement))
         {
-            //illustrationController.ShowIllustration(dialogueElement.illustrationName, _dialogueType);
-            illustrationController.ShowAnimationIllustration(dialogueElement.illustrationName, _dialogueType);
+            // 일러스트 이름이 !HideIllustration이라면 일러스트를 끄라는 의미이므로 일러스트 숨기기 
+            if (dialogueElement.illustrationName == "!HideIllustration")
+            {
+                illustrationController.HideIllustration(_dialogueType);
+            }
+            else
+            {
+                illustrationController.ShowAnimationIllustration(dialogueElement.illustrationName, _dialogueType);
+            }
         }
         
         // 대사에 초상화가 존재한다면 일러스트 출력
@@ -173,7 +201,7 @@ public class DialogueManager : Singleton<DialogueManager>
         // 대사에 표시 아이템이 존재한다면 표시 아이템 출력
         if (HasDisplayItem(dialogueElement))
         {
-            if (dialogueElement.displayItemName == "Delete Item")   // 표시 아이템 이름이 Delete Item이면 표시 아이템을 지우라는 의미이므로 표시 아이템 숨기기
+            if (dialogueElement.displayItemName == "!HideDisplayItem")   // 표시 아이템 이름이 Delete Item이면 표시 아이템을 지우라는 의미이므로 표시 아이템 숨기기
             {
                 displayItemController.HideDisplayItem();
             }
@@ -186,7 +214,7 @@ public class DialogueManager : Singleton<DialogueManager>
         // 대사에 배경음악이 존재한다면 배경음악 재생
         if (HasBGM(dialogueElement))
         {
-            if (dialogueElement.bgmName == "Stop Music")    // 배경음악 이름이 Stop Music이면 배경음악을 끄라는 의미이므로 배경음악 끄기
+            if (dialogueElement.bgmName == "!StopMusic")    // 배경음악 이름이 Stop Music이면 배경음악을 끄라는 의미이므로 배경음악 끄기
             {
                 AudioManager.Instance.StopBGM();
             }
@@ -202,40 +230,46 @@ public class DialogueManager : Singleton<DialogueManager>
             AudioManager.Instance.PlaySFX(dialogueElement.sfxName);
         }
         
-        _dialogueUI?.Hide(this); // 이전 대화 UI 숨기기
-        
-        if (_hasChoice) // 선택지 출력할지 여부 검사
-        {
-            // 선택지 출력 로직 
-            choiceController.ShowChoice(_choiceID, _dialogueType, this);
-            Debug.Log("선택지 출력!");
+        // 대화 화면 출력 처리
+        _dialogueUI = SelectDialogueUI();
+        _dialogueUI?.Display(dialogue, dialogueElement, this);
             
-            _hasChoice = false;
+        // 대화 인덱스 및 ID 처리
+        if (HasLinkedDialogueID(dialogueElement, out _linkedDialogueID) || GameManager.Instance.isDay5AllGood) // 현재 대사에 연결된 대화 ID 존재 여부
+        {
+            // 예외적인 코드 
+            if (GameManager.Instance.isDay5AllGood)
+            {
+                GameManager.Instance.isDay5AllGood = false;
+                
+                // 좋은 선택지이므로 좋은 선택 횟수 증가 
+                GameManager.Instance.GoodChoiceNumber++;
+                
+                if (GameManager.Instance.BadChoiceNumber == 0)
+                {
+                    NextDialogue(198);
+                }
+            }
+            
+            _currentDialogueID = _linkedDialogueID;
+            _currentScriptIndex = 0;
         }
         else
         {
-            // 대화 화면 출력 처리
-            _dialogueUI = SelectDialogueUI();
-            _dialogueUI?.Display(dialogue, dialogueElement, this);
-            
-            // 대화 인덱스 및 ID 처리
-            if (HasLinkedDialogueID(dialogueElement, out _linkedDialogueID)) // 현재 대사에 연결된 대화 ID 존재 여부
+            _currentScriptIndex++;
+            if (_currentScriptIndex >= dialogue.dialogueElements.Count) // 대사 인덱스 초과 시
             {
-                _currentDialogueID = _linkedDialogueID;
                 _currentScriptIndex = 0;
+                _currentDialogueID++;
             }
-            else
-            {
-                _currentScriptIndex++;
-                if (_currentScriptIndex >= dialogue.dialogueElements.Count) // 대사 인덱스 초과 시
-                {
-                    _currentScriptIndex = 0;
-                    _currentDialogueID++;
-                }
-            }
+        }
 
-            // 선택지 존재 여부 처리
-            _hasChoice = HasChoice(dialogueElement, out _choiceID);
+        // 선택지 존재 여부 처리
+        _hasChoice = HasChoice(dialogueElement, out _choiceID);
+
+        if (GameManager.Instance.isDay5AllGood)
+        {
+            _currentScriptIndex = 0;
         }
     }
 
@@ -271,12 +305,14 @@ public class DialogueManager : Singleton<DialogueManager>
             
             case DialogueType.VerandaDialogue:
             case DialogueType.VerandaNarration:
-                // 일러스트 숨기기
-                illustrationController.HideIllustration(_dialogueType);
-                // 초상화 숨기기
-                portraitController.HidePortrait(_dialogueType);
-                // 표시 아이템 숨기기
-                displayItemController.HideDisplayItem();
+                // // 일러스트 숨기기
+                // illustrationController.HideIllustration(_dialogueType);
+                // // 초상화 숨기기
+                // portraitController.HidePortrait(_dialogueType);
+                // // 표시 아이템 숨기기
+                // displayItemController.HideDisplayItem();
+                
+                // --- 이제 베란다나 엔딩 대화는 대화가 종료돼도 삽화와 초상화, 표시 아이템을 숨기지 않음. ( 그대로 둠 )
                 
                 // 현재 씬 확인
                 // 현재 씬이 Dialogue 씬인지 확인
@@ -289,6 +325,9 @@ public class DialogueManager : Singleton<DialogueManager>
                 // 현재 씬이 Ending 씬인지 확인
                 if (GameManager.Instance.CurrentSceneBuildIndex == SceneName.Ending)
                 {
+                    // 엔딩 정보 표시 출력 
+                    SceneController.Instance.ShowEndingBox(GameManager.Instance.SelectedEnding);
+                    
                     // Title 씬으로 전환
                     SceneController.Instance.ChangeScene(SceneName.Title);
                 }
@@ -317,6 +356,7 @@ public class DialogueManager : Singleton<DialogueManager>
         // 타이핑 트윈 시작 
         _typingTween = dialogueText.DOText(fullDialogue, fullDialogue.Length * typingSpeed)
             .SetEase(Ease.Linear)
+            .OnUpdate(() => { StartCoroutine(PlayTypingSoundEffect(dialogueText.text)); })
             .OnComplete(() => _isTyping = false);
     }
 
@@ -327,6 +367,20 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             _typingTween.Complete();
         }
+    }
+
+    private IEnumerator PlayTypingSoundEffect(string currentText)
+    {
+        if (string.IsNullOrEmpty(currentText)) yield break;
+        if (_isPlayingTypingEffect) yield break;
+        
+        char lastChar = currentText[currentText.Length - 1];
+        if (char.IsWhiteSpace(lastChar)) yield break;
+        
+        _isPlayingTypingEffect = true;
+        AudioManager.Instance.PlaySFX("Typing_SFX");
+        yield return _waitForTypingSoundEffect;
+        _isPlayingTypingEffect = false;
     }
 
     // 삽화 끄기 
@@ -348,19 +402,11 @@ public class DialogueManager : Singleton<DialogueManager>
             case DialogueType.VerandaDialogue:
                 // 일러스트 숨기기
                 illustrationController.HideIllustration(_dialogueType);
-                // 초상화 숨기기
-                portraitController.HidePortrait(_dialogueType);
-                // 표시 아이템 숨기기
-                displayItemController.HideDisplayItem();
                 break;
             
             case DialogueType.VerandaNarration:
                 // 일러스트 숨기기
                 illustrationController.HideIllustration(_dialogueType);
-                // 초상화 숨기기
-                portraitController.HidePortrait(_dialogueType);
-                // 표시 아이템 숨기기
-                displayItemController.HideDisplayItem();
                 break;
             
             default:

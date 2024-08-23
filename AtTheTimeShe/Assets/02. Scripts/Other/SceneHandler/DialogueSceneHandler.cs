@@ -37,8 +37,6 @@ public class DialogueSceneHandler : MonoBehaviour, ISceneInitializer
     {
         InitializeScene();
         
-        // 해당 날짜의 대화 시작 메서드를 페이드아웃 종료시 실행되는 이벤트에 구독 
-
         // 엔딩 암시 대화
         if (GameManager.Instance.Date == 6)
         {

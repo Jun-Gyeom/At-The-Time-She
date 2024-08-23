@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b797bad1adbf6cd4eb67f151cf191456, type: 3}
   m_Name: Happy Ending
   m_EditorClassIdentifier: 
+  endingType: Happy End
   endingName: "\uCE5C\uD55C \uB204\uB098"
   endingEnglishName: Close Older Sister
   isUnlocked: 0

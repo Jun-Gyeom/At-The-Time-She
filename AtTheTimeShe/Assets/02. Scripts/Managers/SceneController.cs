@@ -30,7 +30,10 @@ public class SceneController : Singleton<SceneController>
     public Image fadeImage;                     // 페이드인 페이드아웃에 사용할 이미지
     public GameObject fadeImageGameObject;
     public TMP_Text dataText;                   // 날짜 텍스트 
-    public GameObject dataTextGameObject;   
+    public GameObject dataTextGameObject;
+    public GameObject endingBox;                // 엔딩 표시 박스 
+    public TMP_Text endingTypeText;             // 엔딩 종류 텍스트 
+    public TMP_Text endingNameText;             // 엔딩 이름 텍스트
     
     private WaitForSeconds _waitForFadeInOut;
     private WaitForSeconds _waitForFading;
@@ -148,5 +151,27 @@ public class SceneController : Singleton<SceneController>
             dataTextGameObject.SetActive(false);
             dataText.color = Color.white;
         });
+    }
+
+    public void ShowEndingBox(Ending ending)
+    {
+        // 엔딩 정보 입력 
+        endingTypeText.text = ending.endingType;
+        endingNameText.text = ending.endingName;
+        
+        endingBox.SetActive(true);
+
+        // In 트윈 실행 
+        endingBox.transform.DOMoveY(0f, 2.5f);
+        
+        // 5초 후 숨기기 
+        Invoke("HideEndingBox", 7.5f);
+    }
+
+    public void HideEndingBox()
+    {
+        // Out 트윈 실행 
+        endingBox.transform.DOMoveY(-120f, 2.5f)
+            .OnComplete(() => endingBox.SetActive(false));
     }
 }

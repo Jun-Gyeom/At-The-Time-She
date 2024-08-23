@@ -25,8 +25,10 @@ public class ChoiceController : Singleton<ChoiceController>
     
     private bool _isDisplayedChoice;    // 선택지가 출력되어 있는지 여부
     
-    private void Start()
+    private new void Awake()
     {
+        base.Awake();
+        
         CSVParser csvParser = new CSVParser();
         
         // 선택지 데이터 파싱

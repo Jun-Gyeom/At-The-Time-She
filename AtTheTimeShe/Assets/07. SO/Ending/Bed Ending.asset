@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e02178e5e8131439b2cb2d12353c3a, type: 3}
   m_Name: Bed Ending
   m_EditorClassIdentifier: 
+  endingType: Bed End
   endingName: "\uCE68\uB300\uC640 \uC5F4\uC560\uC911"
   endingEnglishName: In Love with My Bed
   isUnlocked: 0

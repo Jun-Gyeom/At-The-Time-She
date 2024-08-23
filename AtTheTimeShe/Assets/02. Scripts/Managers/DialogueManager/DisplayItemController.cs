@@ -12,8 +12,10 @@ public class DisplayItemController : Singleton<DisplayItemController>
     [HideInInspector] public GameObject verandaDisplayItemPanelGameObject;            // 표시 아이템 패널 오브젝트
     [HideInInspector] public Image verandaDisplayItemImage;                           // 표시 아이템 이미지
     
-    private void Start()
+    private new void Awake()
     {
+        base.Awake();
+        
         _displayItems = ResourceManager.Instance.LoadAll<Sprite>("DisplayItem");
     }
 

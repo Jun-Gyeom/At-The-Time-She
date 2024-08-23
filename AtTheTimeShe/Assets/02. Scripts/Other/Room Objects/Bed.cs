@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +7,7 @@ public class Bed : RoomObject
 {
     public int goodStateLinkedDialogueID;           // 침대 상태가 좋을 때 출력될 대화 ID
     public int beforeDialogueStateLinkedDialogueID; // 대화 이전일 때 출력될 대화 ID 
-
-    [Header("Setting")] 
-    public int goodChoiceNumberForNeatBed;    // 정돈된 침대 상태를 위한 좋은 선택 갯수 
+    
     public override void Interact()
     {
         // 대화 이후인지 확인 
@@ -43,7 +42,7 @@ public class Bed : RoomObject
     private void UseTheBed()
     {
         // 침대 상태가 좋을 때 
-        if (GameManager.Instance.GoodChoiceNumber >= goodChoiceNumberForNeatBed)
+        if (GameManager.Instance.IsGoodStateOfBed)
         {
             DialogueManager.Instance.StartDialogue(goodStateLinkedDialogueID);
         }

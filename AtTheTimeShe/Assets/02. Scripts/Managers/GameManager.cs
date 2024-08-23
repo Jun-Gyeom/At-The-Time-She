@@ -26,11 +26,13 @@ public class GameManager : Singleton<GameManager>
     public int BedEndingCount { get; set; }             // 침대 엔딩 조건 카운트 
     public SceneName CurrentSceneBuildIndex { get; private set; } // 현재 씬
     public Ending SelectedEnding { get; private set; }  // 결정된 게임 엔딩 
+    public bool isDay5AllGood;  // 예외적인 변수. 해당 케이스에만 사용. 
 
     [Header("Setting")]
     public List<Date> dates;                            // 날짜 리스트 
     public int workNumberForHasGift;                    // 선물을 얻기 위해 필요한 일한 횟수 
     public int checkEndingDay;                          // 엔딩 조건을 판별할 날짜 
+    public int checkRealBadEndingDay;                   // 진짜 배드 엔딩 조건을 판별할 날짜 
     public int endingDay;                               // 엔딩을 플레이할 날짜 
 
     [Header("Ending")] 
@@ -128,6 +130,35 @@ public class GameManager : Singleton<GameManager>
             }
         }
         
+        // 진짜 배드 엔딩 조건을 검사할 날인지 확인
+        if (Date == checkRealBadEndingDay)
+        {
+            // 배드엔딩 조건 확인
+            if (realBadEnding.CheckEndingCondition())
+            {
+                // 배드 엔딩으로 결정 후 엔딩씬으로. 
+                
+                // 진짜 배드 엔딩 결정
+                SelectedEnding = realBadEnding;
+                
+                // Ending 씬 로드
+                SceneController.Instance.ChangeScene(SceneName.Ending);
+            }
+        }
+        
+        // 이미 결정된 엔딩이 없는지 확인
+        if (SelectedEnding == null)
+        {
+            // 엔딩 조건 판정 날짜인지 확인 
+            if (Date == checkEndingDay)
+            {
+                // 엔딩 조건 판정 
+                SelectedEnding = CheckEnding();
+            
+                Debug.Log($"결정된 게임 엔딩 : {SelectedEnding}");
+            }
+        }
+        
         // 오늘 대화 여부 초기화
         DidTodayDialogue = false;
 
@@ -173,14 +204,8 @@ public class GameManager : Singleton<GameManager>
     // 현재 나쁜 선택지가 한번도 없었다면, 5일차 All Good 대화 ID로 이동하는 메서드 ( 개 똥 메서드 ) 
     public void CheckDay5AllGood()
     {
-        // 좋은 선택지이므로 좋은 선택 횟수 증가 
-        GoodChoiceNumber++;
-        
-        if (BadChoiceNumber == 0)
-        {
-            // ------------------------( 여기 파라미터를 5일차 All Good 대화 시작 지점 대화 ID 적으면 됨. ) 
-            DialogueManager.Instance.NextDialogue(1 );
-        }
+        // 예외적인 상황처리
+        isDay5AllGood = true;
     }
     
     // 게임 데이터 초기화 
@@ -268,6 +293,11 @@ public class GameManager : Singleton<GameManager>
     {
         Ending ending;
         
+        Debug.Log($"좋은 선택 갯수 : {GoodChoiceNumber}\n" +
+                  $"나쁜 선택 갯수 : {BadChoiceNumber}\n" +
+                  $"선물 주었는지 여부 : {PresentGift}\n" +
+                  $"선물 구매하였는지 여부 : {HasGift}");
+        
         // 엔딩 체크하기
         // 진 엔딩 조건 체크 ( 옆집 누나 ) 
         if (trueEnding.CheckEndingCondition())
@@ -285,12 +315,6 @@ public class GameManager : Singleton<GameManager>
         else if (normalEnding.CheckEndingCondition())
         {
             ending = normalEnding;
-        }
-        
-        // 진짜 베드 엔딩 조건 체크 ( 손절이야 )
-        else if (realBadEnding.CheckEndingCondition())
-        {
-            ending = realBadEnding;
         }
 
         // 예외 처리 
@@ -313,18 +337,5 @@ public class GameManager : Singleton<GameManager>
     {
         // 현재 씬 정보 업데이트 
         CurrentSceneBuildIndex = (SceneName)scene.buildIndex;
-
-        // 이미 결정된 엔딩이 없는지 확인
-        if (SelectedEnding == null)
-        {
-            // 엔딩 조건 판정 날짜인지 확인 
-            if (Date == checkEndingDay)
-            {
-                // 엔딩 조건 판정 
-                SelectedEnding = CheckEnding();
-            
-                Debug.Log($"결정된 게임 엔딩 : {SelectedEnding}");
-            }
-        }
     }
 }

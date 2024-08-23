@@ -185,7 +185,11 @@ public class CSVParser
             
             // 대화 - 선물 주기
             case "!PresentGift":
-                triggerEvent = () => { GameManager.Instance.PresentGift = true; };
+                triggerEvent = () =>
+                {
+                    GameManager.Instance.PresentGift = true;
+                    GameManager.Instance.GoodChoiceNumber += 1;
+                };
                 break;
             
             // 대화 - 삽화 끄기 

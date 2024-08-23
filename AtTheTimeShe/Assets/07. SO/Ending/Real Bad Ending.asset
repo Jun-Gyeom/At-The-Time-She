@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ab7742fc673f64680c507dc8d1d522, type: 3}
   m_Name: Real Bad Ending
   m_EditorClassIdentifier: 
+  endingType: Bad End
   endingName: "\uC190\uC808\uC774\uC57C"
   endingEnglishName: Cutting Ties
   isUnlocked: 0
-  consoleMessage: 
+  consoleMessage: "'\uB2E4\uC2E0 \uB9CC\uB098\uC9C0 \uB9D0\uC790. '"

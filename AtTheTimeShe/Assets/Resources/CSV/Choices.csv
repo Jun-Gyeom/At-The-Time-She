@@ -15,7 +15,7 @@ Choice ID,Choice Script,Condition,Trigger Event,Linked Dialogue ID
 7,하루에 한 갑 정도...?,,!GoodChoice,17
 ,하루에 다섯 갑 정도...?,,!BadChoice ,21
 8,무슨 밴드 노래 들어요?,,!GoodChoice,72
-,...,,!BadChoice ,107
+,...,,!BadChoice ,106
 9,알바 따위 수십 개도 해봤죠~,,!BadChoice ,52
 ,예전에 몇 가지 정도는 해 봤어요.,,!GoodChoice,56
 10,약간...디자인 같은 쪽 아니에요?,,!GoodChoice,25
@@ -23,7 +23,6 @@ Choice ID,Choice Script,Condition,Trigger Event,Linked Dialogue ID
 11,대학생 때...,,!GoodChoice,91
 ,그럭저럭...,,!BadChoice ,96
 12,취하기전에 선물 산거 드려야 겠다.,!HasGift,!GoodChoice,16
-,선물...음...아니다...,,!BadChoice ,26
+,선물...음...아니다...,,!BadChoice ,27
 13,저...이상형은 딱히 없어요.,,!BadChoice ,119
-,저...누나 같은 사람이요...,,!Day5AllGood,134
-,,,,
+,저...누나 같은 사람이요...,,!Day5AllGood,135

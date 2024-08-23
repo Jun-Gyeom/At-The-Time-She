@@ -44,8 +44,8 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
         // 플레이어 상태 Room으로 변경. 
         GameManager.Instance.playerState = GameManager.PlayerState.Room;
         
-        // 방 상태 출력 
-        ShowRoomState();
+        // 페이드아웃 후 방 BGM 재생.
+        SceneController.Instance.OnFadeComplate += () => AudioManager.Instance.PlayBGM("BoyRoom_BGM");
         
         // 베란다에서 대화를 진행하였는지 확인
         // 대화 이후 ( 저녁 )
@@ -75,6 +75,9 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
                 }
             }
         }
+        
+        // 방 상태 출력 
+        ShowRoomState();
         
         // 오늘 대화 여부에 따라 방 밝기 적용 
         darkPanelGameObject.SetActive(GameManager.Instance.DidTodayDialogue);
@@ -108,8 +111,11 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
         }
         
         // 쓰레기 청소 
-        trashGameObject.SetActive(GameManager.Instance.IsGoodStateOfTrash);
-        trashColliderGameObject.SetActive(GameManager.Instance.IsGoodStateOfTrash);
+        if (GameManager.Instance.IsGoodStateOfTrash)
+        {
+            trashGameObject.SetActive(false);
+            trashColliderGameObject.SetActive(false);
+        }
     }
 
     // 방 상태 확인하여 상태 변경 

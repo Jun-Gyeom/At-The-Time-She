@@ -1,12 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
 {
+    public Animator creditsAnimator;        // 크레딧 애니메이터 
+    public GameObject creditsPanel;         // 크레딧 패널 게임 오브젝트 
+    public TMP_Text creditText1;
+    public TMP_Text creditText2;
+    public TMP_Text creditText3;
+    
+    private bool _isCreditsAnimating = false;
+    
+    private Vector2 initialPosText1;
+    private Vector2 initialPosText2;
+    private Vector2 initialPosText3;
     private void Start()
     {
         InitializeScene();
+        
+        // 초기 위치 저장
+        initialPosText1 = creditText1.GetComponent<RectTransform>().anchoredPosition;
+        initialPosText2 = creditText2.GetComponent<RectTransform>().anchoredPosition;
+        initialPosText3 = creditText3.GetComponent<RectTransform>().anchoredPosition;
     }
     
     public void InitializeScene()
@@ -36,7 +54,52 @@ public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
     // 설정 끄기 버튼 이벤트에 등록 
     public void HideSettings()
     {
-        
+        creditsPanel.SetActive(true);
+    }
+    
+    public void ShowCredits()
+    {
+        if (_isCreditsAnimating) return; // 애니메이션 중이면 리턴
+
+        _isCreditsAnimating = true;
+        creditsPanel.SetActive(true);
+
+        // 애니메이션 시작 전 초기 위치로 재설정
+        creditText1.GetComponent<RectTransform>().anchoredPosition = initialPosText1;
+        creditText2.GetComponent<RectTransform>().anchoredPosition = initialPosText2;
+        creditText3.GetComponent<RectTransform>().anchoredPosition = initialPosText3;
+
+        Sequence showSequence = DOTween.Sequence();
+        showSequence.Append(creditText1.GetComponent<RectTransform>().DOAnchorPosX(75f, 1f))
+            .Append(creditText2.GetComponent<RectTransform>().DOAnchorPosX(75f, 1f))
+            .Append(creditText3.GetComponent<RectTransform>().DOAnchorPosX(75f, 1f))
+            .OnComplete(() => _isCreditsAnimating = false); // 애니메이션 완료 후 상태 해제
+    }
+
+    public void HideCredits()
+    {
+        if (_isCreditsAnimating) return; // 애니메이션 중이면 리턴
+
+        _isCreditsAnimating = true;
+
+        Sequence hideSequence = DOTween.Sequence();
+        hideSequence.Append(creditText1.DOFade(0f, 1f))
+            .Join(creditText2.DOFade(0f, 1f))
+            .Join(creditText3.DOFade(0f, 1f))
+            .OnComplete(() =>
+            {
+                creditsPanel.SetActive(false);
+                ResetCreditTextAlpha();
+                _isCreditsAnimating = false; // 애니메이션 완료 후 상태 해제
+            });
+    }
+    
+    private void ResetCreditTextAlpha()
+    {
+        // 텍스트가 다시 보이도록 알파 값을 초기화
+        creditText1.color = new Color(1f, 1f, 1f, 1f);
+        creditText2.color = new Color(1f, 1f, 1f, 1f);
+        creditText3.color = new Color(1f, 1f, 1f, 1f);
     }
 
     // 게임 종료 버튼 이벤트에 등록 

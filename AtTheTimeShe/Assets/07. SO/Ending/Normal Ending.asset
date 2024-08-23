@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b5160aea29053741a9e970e20fe152f, type: 3}
   m_Name: Normal Ending
   m_EditorClassIdentifier: 
+  endingType: Normal End
   endingName: "\uADF8\uC800 \uADF8\uB7F0.."
   endingEnglishName: Just So-So...
   isUnlocked: 0

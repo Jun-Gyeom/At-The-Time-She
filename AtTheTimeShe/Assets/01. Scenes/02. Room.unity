@@ -1206,7 +1206,6 @@ MonoBehaviour:
   linkedDialogueSceneID: 106
   goodStateLinkedDialogueID: 107
   beforeDialogueStateLinkedDialogueID: 120
-  goodChoiceNumberForNeatBed: 3
 --- !u!60 &672950646
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3237,8 +3236,8 @@ PolygonCollider2D:
     - - {x: 8.891843, y: 4.002322}
       - {x: 7.8045588, y: 3.9444854}
       - {x: 7.751293, y: 3.9155354}
-      - {x: 7.7536445, y: -5.0045877}
-      - {x: 8.891945, y: -5.0046144}
+      - {x: 7.762068, y: -4.4050303}
+      - {x: 8.898673, y: -4.8767924}
   m_UseDelaunayMesh: 0
 --- !u!224 &430286581457106865
 RectTransform:

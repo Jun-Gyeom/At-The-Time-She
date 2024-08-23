@@ -16,8 +16,10 @@ public class AudioManager : Singleton<AudioManager>
     private Dictionary<string, AudioClip> _bgmClips = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> _sfxClips = new Dictionary<string, AudioClip>();
 
-    private void Start()
+    private new void Awake()
     {
+        base.Awake();
+        
         _bgmClips = ResourceManager.Instance.LoadAll<AudioClip>("Audio/BGM");
         _sfxClips = ResourceManager.Instance.LoadAll<AudioClip>("Audio/SFX");
         

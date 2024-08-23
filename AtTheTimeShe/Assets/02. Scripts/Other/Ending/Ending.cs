@@ -5,6 +5,7 @@ using UnityEngine;
 
 public abstract class Ending : ScriptableObject
 {
+    public string endingType;                   // 어떤 엔딩인지 
     public string endingName;                   // 엔딩 이름
     public string endingEnglishName;            // 엔딩 영문 이름 
     public bool isUnlocked;                     // 해당 엔딩을 봤는지 여부  

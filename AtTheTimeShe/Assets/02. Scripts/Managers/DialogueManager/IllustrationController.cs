@@ -24,13 +24,27 @@ public class IllustrationController : Singleton<IllustrationController>
             case DialogueType.RoomDialogue:
             case DialogueType.RoomNarration:
                 roomDisplayImagePanelGameObject.SetActive(true);
-                roomIllustrationAnimator.Play(illustrationName);
+                try
+                {
+                    roomIllustrationAnimator.Play(illustrationName);
+                }
+                catch
+                {
+                    Debug.LogError($"다음 이름의 삽화 애니메이션을 찾을 수 없습니다. : {illustrationName}");
+                }
                 break;
             
             case DialogueType.VerandaDialogue:
             case DialogueType.VerandaNarration:
                 verandaIllustrationGameObject.SetActive(true);
-                verandaIllustrationAnimator.Play(illustrationName);
+                try
+                {
+                    verandaIllustrationAnimator.Play(illustrationName);
+                }
+                catch
+                {
+                    Debug.LogError($"다음 이름의 삽화 애니메이션을 찾을 수 없습니다. : {illustrationName}");
+                }
                 break;
             
             default:
@@ -50,6 +64,7 @@ public class IllustrationController : Singleton<IllustrationController>
                 break;
             
             case DialogueType.VerandaDialogue:
+            case DialogueType.VerandaNarration:
                 verandaIllustrationGameObject.SetActive(false);
                 break;
             
