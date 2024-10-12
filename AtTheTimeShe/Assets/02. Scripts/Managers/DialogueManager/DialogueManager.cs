@@ -52,6 +52,11 @@ public class DialogueManager : Singleton<DialogueManager>
     private Tween _typingTween;                   // 대화 타이핑 트윈 
     private WaitForSeconds _waitForTypingSoundEffect;   
     
+    // 버그수정용 ( 베란다 씬 대화 창 딜레이 )
+    [HideInInspector] public bool isNotInitDialogue = false;
+    // 대화끝 페이드아웃
+    private bool _doFade = false;
+    
     private new void Awake()
     {
         base.Awake();
@@ -107,6 +112,18 @@ public class DialogueManager : Singleton<DialogueManager>
             SkipTypingEffect();
             return;
         }
+
+        // 대화 UI 출력 대기 중인지 확인 
+        if (_dialogueUI != null && _dialogueUI.IsFading)
+        {
+            return; 
+        }
+        
+        // 일러스트나 표시 아이템이 페이딩 중인지 확인
+        if (illustrationController.isFading || displayItemController.isFading)
+        {
+            return;
+        }
         
         if (_currentDialogues == null) // 대화 시작 여부
         {
@@ -136,7 +153,7 @@ public class DialogueManager : Singleton<DialogueManager>
             if (_hasChoice) 
             {
                 // 이전 대화 UI 숨기기
-                _dialogueUI?.Hide(this); 
+                _dialogueUI?.Hide(this, _doFade); 
                 
                 // 선택지 출력 로직 
                 choiceController.ShowChoice(_choiceID, _dialogueType, this);
@@ -166,7 +183,7 @@ public class DialogueManager : Singleton<DialogueManager>
         _dialogueType = dialogue.dialogueType;
         
         // 이전 대화 UI 숨기기
-        _dialogueUI?.Hide(this); 
+        _dialogueUI?.Hide(this, _doFade); 
         
         if (_hasChoice) // 선택지 출력할지 여부 검사
         {
@@ -247,11 +264,14 @@ public class DialogueManager : Singleton<DialogueManager>
                 
                 if (GameManager.Instance.BadChoiceNumber == 0)
                 {
-                    NextDialogue(198);
+                    _currentDialogueID = 198;
                 }
             }
+            else
+            {
+                _currentDialogueID = _linkedDialogueID;
+            }
             
-            _currentDialogueID = _linkedDialogueID;
             _currentScriptIndex = 0;
         }
         else
@@ -282,6 +302,8 @@ public class DialogueManager : Singleton<DialogueManager>
     public void EndDialogue()
     {
         _currentDialogues = null;
+
+        _doFade = false;
         
         // 플레이어 상태 전환
         if (SceneManager.GetActiveScene().buildIndex == 1)  
@@ -304,15 +326,16 @@ public class DialogueManager : Singleton<DialogueManager>
                 break;
             
             case DialogueType.VerandaDialogue:
-            case DialogueType.VerandaNarration:
-                // // 일러스트 숨기기
-                // illustrationController.HideIllustration(_dialogueType);
-                // // 초상화 숨기기
-                // portraitController.HidePortrait(_dialogueType);
-                // // 표시 아이템 숨기기
-                // displayItemController.HideDisplayItem();
+            case DialogueType.VerandaNarration: 
+                // 일러스트 숨기기
+                illustrationController.HideIllustration(_dialogueType);
+                // 표시 아이템 숨기기
+                displayItemController.HideDisplayItem();
                 
-                // --- 이제 베란다나 엔딩 대화는 대화가 종료돼도 삽화와 초상화, 표시 아이템을 숨기지 않음. ( 그대로 둠 )
+                // 시작 페이드 할지 여부 초기화
+                isNotInitDialogue = false;
+                // 종료 페이드
+                _doFade = true;
                 
                 // 현재 씬 확인
                 // 현재 씬이 Dialogue 씬인지 확인
@@ -339,7 +362,7 @@ public class DialogueManager : Singleton<DialogueManager>
         }
 
         // 대화 창 숨기기
-        _dialogueUI?.Hide(this);
+        _dialogueUI?.Hide(this, _doFade);
         
         Debug.Log("대화 종료.");
     }

@@ -25,6 +25,7 @@ public class SceneController : Singleton<SceneController>
     public float fadingDuration;                // 페이드인 된 채로 대기하는 시간 
     public float dateTextInAnimationDuration;   // 날짜 텍스트 In 애니메이션에 걸리는 시간 
     public float dateTextOutAnimationDuration;  // 날짜 텍스트 Out 애니메이션에 걸리는 시간 
+    public float endingBoxFadeDuration = 1f;
     
     [Header("Object")]
     public Image fadeImage;                     // 페이드인 페이드아웃에 사용할 이미지
@@ -162,16 +163,16 @@ public class SceneController : Singleton<SceneController>
         endingBox.SetActive(true);
 
         // In 트윈 실행 
-        endingBox.transform.DOMoveY(0f, 2.5f);
+        endingBox.transform.DOMoveY(0f, endingBoxFadeDuration);
         
-        // 5초 후 숨기기 
-        Invoke("HideEndingBox", 7.5f);
+        // 대기 후 숨기기 
+        Invoke("HideEndingBox", endingBoxFadeDuration + 2f);
     }
 
     public void HideEndingBox()
     {
         // Out 트윈 실행 
-        endingBox.transform.DOMoveY(-120f, 2.5f)
+        endingBox.transform.DOMoveY(-120f, endingBoxFadeDuration)
             .OnComplete(() => endingBox.SetActive(false));
     }
 }

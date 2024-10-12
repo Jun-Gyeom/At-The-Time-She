@@ -52,6 +52,11 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.A))//------------------------------------------------
+        {
+            OnNextDialogue();
+        }
+        
         // 마우스 포인터 오브젝트 감지 
         CheckOnPointObject();
 
@@ -253,7 +258,7 @@ public class GameManager : Singleton<GameManager>
         // 결정된 게임 엔딩 초기화 
         SelectedEnding = null;
     }
-
+    
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;

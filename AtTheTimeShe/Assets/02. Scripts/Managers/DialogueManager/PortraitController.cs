@@ -10,6 +10,7 @@ public class PortraitController : Singleton<PortraitController>
     // 베란다 대화 GUI - 초상화 
     [HideInInspector] public GameObject verandaPortraitGameObject;        // 초상화 오브젝트
     [HideInInspector] public Image verandaPortraitImage;                  // 초상화 이미지
+    
     private new void Awake()
     {
         base.Awake();

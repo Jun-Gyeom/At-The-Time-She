@@ -25,15 +25,24 @@ public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
         initialPosText1 = creditText1.GetComponent<RectTransform>().anchoredPosition;
         initialPosText2 = creditText2.GetComponent<RectTransform>().anchoredPosition;
         initialPosText3 = creditText3.GetComponent<RectTransform>().anchoredPosition;
+
+        // 씬 전환 중인지 여부
+        if (SceneController.Instance.IsSceneChanging)
+        {
+            // 페이드아웃 후 타이틀 배경음악 재생.
+            SceneController.Instance.OnFadeComplate += () => AudioManager.Instance.PlayBGM("Title_BGM");
+        }
+        else
+        {
+            // 타이틀 배경음악 재생
+            AudioManager.Instance.PlayBGM("Title_BGM");
+        }
     }
     
     public void InitializeScene()
     {
         // 플레이어 상태 None으로 변경. 
         GameManager.Instance.playerState = GameManager.PlayerState.None;
-        
-        // 타이틀 배경음악 재생
-        AudioManager.Instance.PlayBGM("Title_BGM");
         
         // 게임 데이터 초기화 
         GameManager.Instance.InitializeGameData();

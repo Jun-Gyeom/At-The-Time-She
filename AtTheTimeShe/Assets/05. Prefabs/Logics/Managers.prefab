@@ -441,6 +441,7 @@ MonoBehaviour:
   fadingDuration: 2.5
   dateTextInAnimationDuration: 2.75
   dateTextOutAnimationDuration: 1.5
+  endingBoxFadeDuration: 1
   fadeImage: {fileID: 1435669273292013267}
   fadeImageGameObject: {fileID: 3919314826515204682}
   dataText: {fileID: 1237439658741446992}
@@ -1075,6 +1076,9 @@ MonoBehaviour:
   bgmSource: {fileID: 1264424339571188113}
   sfxSources: []
   sfxSourceCount: 50
+  musicTransitionDuration: 5
+  musicDefaultVolume: 0.5
+  sfxDefaultVolume: 0.5
 --- !u!82 &1264424339571188113
 AudioSource:
   m_ObjectHideFlags: 0

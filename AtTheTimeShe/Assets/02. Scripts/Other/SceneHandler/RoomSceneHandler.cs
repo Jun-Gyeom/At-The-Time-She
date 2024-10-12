@@ -43,9 +43,13 @@ public class RoomSceneHandler : MonoBehaviour, ISceneInitializer
     {
         // 플레이어 상태 Room으로 변경. 
         GameManager.Instance.playerState = GameManager.PlayerState.Room;
-        
-        // 페이드아웃 후 방 BGM 재생.
-        SceneController.Instance.OnFadeComplate += () => AudioManager.Instance.PlayBGM("BoyRoom_BGM");
+
+        // 침대 엔딩 바로 전날이 아닌지 확인
+        if (GameManager.Instance.BedEndingCount != GameManager.Instance.bedEnding.bedEndingCountForEndingCondition - 1)
+        {
+            // 페이드아웃 후 방 BGM 재생.
+            SceneController.Instance.OnFadeComplate += () => AudioManager.Instance.PlayBGM("BoyRoom_BGM");
+        }
         
         // 베란다에서 대화를 진행하였는지 확인
         // 대화 이후 ( 저녁 )

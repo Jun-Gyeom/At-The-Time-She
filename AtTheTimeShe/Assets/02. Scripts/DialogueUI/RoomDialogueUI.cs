@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class RoomDialogueUI : IDialogueUI
 {
+    private bool _isFading;
+    public bool IsFading
+    {
+        get
+        {
+            return _isFading;
+        }
+        set
+        {
+            _isFading = value;
+        }
+    }
+
     public void Display(Dialogue dialogue, DialogueElement dialogueElement, DialogueManager dialogueManager)
     {
         // 방 텍스트 박스 텍스트 대사 적용 및 활성화 
@@ -15,7 +28,7 @@ public class RoomDialogueUI : IDialogueUI
         dialogueManager.roomTextBoxPanelGameObject.SetActive(true);
     }
     
-    public void Hide(DialogueManager dialogueManager)
+    public void Hide(DialogueManager dialogueManager, bool doFade)
     {
         dialogueManager.roomTextBoxPanelGameObject.SetActive(false);
     }

@@ -40,13 +40,13 @@ public class DialogueSceneHandler : MonoBehaviour, ISceneInitializer
         // 엔딩 암시 대화
         if (GameManager.Instance.Date == 6)
         {
-            SceneController.Instance.OnFadeComplate += GameManager.Instance.SelectedEnding.PlayTrailerDialogue;
+            SceneController.Instance.OnFadeComplate += () => GameManager.Instance.SelectedEnding.PlayTrailerDialogue();
         }
         
         // 일반적인 대화 
         else
         {
-            SceneController.Instance.OnFadeComplate += StartTodayDialogue;
+            SceneController.Instance.OnFadeComplate += () => StartTodayDialogue();
         }
     }
     
@@ -81,5 +81,6 @@ public class DialogueSceneHandler : MonoBehaviour, ISceneInitializer
     private void StartTodayDialogue()
     {
         DialogueManager.Instance.StartDialogue(GameManager.Instance.dates.Find(date => date.date == GameManager.Instance.Date).currentDateDialogueSceneID);
+        Debug.Log("대화 시작");
     }
 }

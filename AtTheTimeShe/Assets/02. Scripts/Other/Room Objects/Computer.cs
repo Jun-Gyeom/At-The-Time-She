@@ -43,35 +43,33 @@ public class Computer : RoomObject
                 // 그 외
                 else
                 {
-                    // 일한 횟수가 선물 구매에 충분한지 확인 
-                    if (GameManager.Instance.WorkNumber >= GameManager.Instance.workNumberForHasGift)
+                    // 오늘 이미 일을 했는지 확인
+                    if (GameManager.Instance.DidTodayWork)
                     {
-                        // 이미 선물을 구매하였는지 확인
-                        if (GameManager.Instance.HasGift)
-                        {
-                            // 선물 구매 불가 
-                        
-                            DialogueManager.Instance.StartDialogue(hasGiftStateLinkedDialogueID);
-                        }
-
-                        // 선물 구매하지 않았을 떄
-                        else
-                        {
-                            // 선물 구매 대화 출력 
-                            DialogueManager.Instance.StartDialogue(canBuyGiftStateLinkedDialogueID);
-                        }
+                        // 일 불가
+                        DialogueManager.Instance.StartDialogue(completeTodayWorkStateLinkedDialogueID);
                     }
+
+                    // 오늘 일을 하지 않았을 때
                     else
                     {
-                        // 오늘 이미 일을 했는지 확인
-                        if (GameManager.Instance.DidTodayWork)
+                        // 일한 횟수가 선물 구매에 충분한지 확인 
+                        if (GameManager.Instance.WorkNumber >= GameManager.Instance.workNumberForHasGift)
                         {
-                            // 일 불가
-                        
-                            DialogueManager.Instance.StartDialogue(completeTodayWorkStateLinkedDialogueID);
-                        }
+                            // 이미 선물을 구매하였는지 확인
+                            if (GameManager.Instance.HasGift)
+                            {
+                                // 선물 구매 불가 
+                                DialogueManager.Instance.StartDialogue(hasGiftStateLinkedDialogueID);
+                            }
 
-                        // 오늘 일을 하지 않았을 때
+                            // 선물 구매하지 않았을 떄
+                            else
+                            {
+                                // 선물 구매 대화 출력 
+                                DialogueManager.Instance.StartDialogue(canBuyGiftStateLinkedDialogueID);
+                            }
+                        }
                         else
                         {
                             // 일하시겠습니까? 대화 출력 

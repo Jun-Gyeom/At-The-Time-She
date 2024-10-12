@@ -22,7 +22,7 @@ Choice ID,Choice Script,Condition,Trigger Event,Linked Dialogue ID
 ,솔직히 대학교 안 나오셨을꺼 같은데...,,!BadChoice ,42
 11,대학생 때...,,!GoodChoice,91
 ,그럭저럭...,,!BadChoice ,96
-12,취하기전에 선물 산거 드려야 겠다.,!HasGift,!GoodChoice,16
+12,취하기전에 선물 산거 드려야 겠다.,!HasGift,!PresentGift,16
 ,선물...음...아니다...,,!BadChoice ,27
 13,저...이상형은 딱히 없어요.,,!BadChoice ,119
 ,저...누나 같은 사람이요...,,!Day5AllGood,135
