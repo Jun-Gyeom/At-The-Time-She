@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
 {
-    public Animator creditsAnimator;        // 크레딧 애니메이터 
     public GameObject creditsPanel;         // 크레딧 패널 게임 오브젝트 
     public TMP_Text creditText1;
     public TMP_Text creditText2;
     public TMP_Text creditText3;
+
+    public GameObject settingPanel; 
+    public TMP_Text bgmVolumeValueText;
+    public TMP_Text sfxVolumeValueText;
+    public float settingPanelTwinDuration = 0.5f;
+    public GameObject maskGameObject;
     
     private bool _isCreditsAnimating = false;
     
@@ -57,15 +63,61 @@ public class TitleSceneHandler : MonoBehaviour, ISceneInitializer
     // 설정 버튼 이벤트에 등록 
     public void ShowSettings()
     {
+        // 볼륨 텍스트 업데이트 
+        UpdateVolumeTextBGM(AudioManager.Instance.BGMVolume);
+        UpdateVolumeTextSFX(AudioManager.Instance.SFXVolume);
         
+        // 설정 출력 
+        Vector3 tempScale = settingPanel.transform.localScale; 
+        settingPanel.transform.localScale = Vector3.zero;
+        settingPanel.transform.DOScale(tempScale, settingPanelTwinDuration).
+            SetEase(Ease.InOutQuad);
+        settingPanel.SetActive(true);
+        
+        // 마스크 오브젝트 활성화
+        maskGameObject.SetActive(true);
     }
 
     // 설정 끄기 버튼 이벤트에 등록 
     public void HideSettings()
     {
-        creditsPanel.SetActive(true);
+        Vector3 tempScale = settingPanel.transform.localScale;
+        settingPanel.transform.DOScale(Vector3.zero, settingPanelTwinDuration)
+            .SetEase(Ease.InOutQuad).
+            OnComplete(() =>
+            {
+                settingPanel.transform.localScale = tempScale;
+                
+                // 설정 비활성화 
+                settingPanel.SetActive(false);
+                
+                // 마스크 오브젝트 비활성화
+                maskGameObject.SetActive(false);
+            });
+    }
+
+    public void SetVolumeBGM(float volume)
+    {
+        AudioManager.Instance.SetBGMVolume(volume);
+        UpdateVolumeTextBGM(volume);
     }
     
+    public void SetVolumeSFX(float volume)
+    {
+        AudioManager.Instance.SetSFXVolume(volume);
+        UpdateVolumeTextSFX(volume);
+    }
+
+    public void UpdateVolumeTextBGM(float volume)
+    {
+        bgmVolumeValueText.text = (volume * 100f).ToString("F0");
+    }
+
+    public void UpdateVolumeTextSFX(float volume)
+    {
+        sfxVolumeValueText.text = (volume * 100f).ToString("F0");
+    }
+
     public void ShowCredits()
     {
         if (_isCreditsAnimating) return; // 애니메이션 중이면 리턴

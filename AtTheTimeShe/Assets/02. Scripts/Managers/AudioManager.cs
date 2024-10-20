@@ -13,7 +13,19 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private List<AudioSource> sfxSources = new List<AudioSource>();    // 효과음용 AudioSource 리스트
 
     private float _currentMusicVolume = 1.0f;
-    private float _currentSfxVolume = 1.0f;                                                
+    private float _currentSfxVolume = 1.0f;
+
+    public float BGMVolume
+    {
+        get => _currentMusicVolume;
+        set => _currentMusicVolume = value;
+    }
+    
+    public float SFXVolume
+    {
+        get => _currentSfxVolume;
+        set => _currentSfxVolume = value;
+    }
     
     [Header("SFX Channel Amount")]
     [SerializeField] private int sfxSourceCount = 5;                                    // 동시에 재생할 수 있는 효과음의 최대 수
@@ -25,14 +37,17 @@ public class AudioManager : Singleton<AudioManager>
 
     private Dictionary<string, AudioClip> _bgmClips = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> _sfxClips = new Dictionary<string, AudioClip>();
-
+    
     private new void Awake()
     {
         base.Awake();
         
         _bgmClips = ResourceManager.Instance.LoadAll<AudioClip>("Audio/BGM");
         _sfxClips = ResourceManager.Instance.LoadAll<AudioClip>("Audio/SFX");
-        
+    }
+
+    private void Start()
+    {
         // 볼륨 초기화
         _currentMusicVolume = musicDefaultVolume;
         _currentSfxVolume = sfxDefaultVolume;
@@ -105,13 +120,29 @@ public class AudioManager : Singleton<AudioManager>
 
     public void SetBGMVolume(float volume)
     {
-        _currentMusicVolume = volume; 
-        mixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20); // 데시벨로 변환
+        _currentMusicVolume = volume;
+
+        if (volume <= 0.0001f)
+        {
+            mixer.SetFloat("BGMVolume", -80f); // 최소 데시벨로 설정 
+        }
+        else
+        {
+            mixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20); // 데시벨로 변환
+        }
     }
 
     public void SetSFXVolume(float volume)
     {
-        _currentSfxVolume = volume; 
-        mixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20); // 데시벨로 변환
+        _currentSfxVolume = volume;
+
+        if (volume <= 0.0001f)
+        {
+            mixer.SetFloat("SFXVolume", -80f); // 최소 데시벨로 설정 
+        }
+        else
+        {
+            mixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20); // 데시벨로 변환
+        }
     }
 }
